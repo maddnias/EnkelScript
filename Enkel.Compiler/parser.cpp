@@ -4,7 +4,7 @@
 #include "bin_expr_node.h"
 #include "module_node.h"
 #include "var_expr_node.h"
-#include "number_expr_node.h"
+#include "const_expr_node.h"
 #include "return_expr_node.h"
 #include "param_list_node.h"
 #include "param_node.h"
@@ -38,7 +38,7 @@ namespace enkel {
 		}
 
 		unique_ptr<module_node> parser::parse_module() {
-			auto mod = make_unique<module_node>("__enkel_mod_0");
+			auto mod = make_unique<module_node>(L"__enkel_mod_0");
 
 			while(mCurTok->get_type() != TOK_EOF) {
 				mod->add_elem(parse_mod_elem());
@@ -52,7 +52,7 @@ namespace enkel {
 			next_token();
 		}
 
-		shared_ptr<lexer_token> parser::get_cur_token() {
+		shared_ptr<lexer_token> parser::get_cur_token() const {
 			return mCurTok;
 		}
 
@@ -97,11 +97,17 @@ namespace enkel {
 		}
 
 		unique_ptr<base_node> parser::parse_number() {
-			int val = mCurTok->get_lexeme_i32();
-			auto numExpr = make_unique<number_expr_node>(val);
+			auto numExpr = make_unique<const_expr_node>(runtime::variant_datatype(mCurTok->get_lexeme_i32()));
 			// Eat number
 			next_token();
 			return move(numExpr);
+		}
+
+		unique_ptr<base_node> parser::parse_literal() {
+			auto literal = make_unique<const_expr_node>(runtime::variant_datatype(mCurTok->get_lexeme_str()));
+			// Eat literal
+			next_token();
+			return move(literal);
 		}
 
 		unique_ptr<base_node> parser::parse_primary() {
@@ -112,6 +118,8 @@ namespace enkel {
 				//		return parse_var_decl();
 			case TOK_NUMBER:
 				return parse_number();
+			case TOK_LITERAL:
+				return parse_literal();
 			case TOK_KEYWORD:
 				return parse_keyword();
 			}
@@ -120,7 +128,7 @@ namespace enkel {
 
 		unique_ptr<base_node> parser::parse_call_expr() {
 			expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
-			string ident = mCurTok->get_lexeme_str();
+			wstring ident = mCurTok->get_lexeme_str();
 			// Eat ident
 			next_token();
 			auto callExpr = make_unique<call_expr_node>(ident);
@@ -158,14 +166,14 @@ namespace enkel {
 
 		unique_ptr<base_node> parser::parse_var_decl() {
 			//TODO: expect scope decl
-			string scopeDecl;
+			wstring scopeDecl;
 			if(mCurTok->get_type() == TOK_VAR_DECL_SCOPE) {
 				scopeDecl = mCurTok->get_lexeme_str();
 				// Eat scope decl
 				next_token();
 			}
 			expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
-			string varIdent = mCurTok->get_lexeme_str();
+			wstring varIdent = mCurTok->get_lexeme_str();
 			// Eat ident
 			next_token();
 
@@ -216,7 +224,7 @@ namespace enkel {
 		}
 
 		unique_ptr<base_node> parser::parse_identifer() {
-			string identName = mCurTok->get_lexeme_str();
+			wstring identName = mCurTok->get_lexeme_str();
 			
 			// Check if it's a call
 			if(peek_next_token()->get_type() == TOK_OPEN_PARENTH) {
@@ -238,7 +246,7 @@ namespace enkel {
 			next_token();
 			expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
 
-			string funcName = mCurTok->get_lexeme_str();
+			wstring funcName = mCurTok->get_lexeme_str();
 			// Eat ident
 			next_token();
 			auto params = parse_params();
@@ -251,7 +259,7 @@ namespace enkel {
 
 		unique_ptr<base_node> parser::parse_keyword() {
 			assert(mCurTok->get_type() == TOK_KEYWORD);
-			if(mCurTok->get_lexeme_str() == "return") {
+			if(mCurTok->get_lexeme_str() == L"return") {
 				// Eat 'return'
 				next_token();
 				return make_unique<return_expr_node>(move(parse_expr()));
@@ -280,6 +288,7 @@ namespace enkel {
 			if(mCurTok->get_type() == TOK_IDENTIFIER) {
 				return parse_identifer();
 			}
+
 			return nullptr;
 		}
 
@@ -334,7 +343,7 @@ namespace enkel {
 			return tokPrec;
 		}
 
-		void parser::expect(const string &expected, string &actual, compiler_logger::error_level level) const {
+		void parser::expect(const wstring &expected, wstring &actual, compiler_logger::error_level level) const {
 			// For debugging purposes
 			if (level > 0) {
 				assert(expected == actual);
@@ -343,15 +352,15 @@ namespace enkel {
 			switch(level) {
 			case error_level::ERR_LVL_DEBUG:
 				if(mCompileLogger) {
-					mCompileLogger->debug("Expected: \"" + expected + "\", got: \"" + actual + "\"");
+					mCompileLogger->debug(L"Expected: \"" + expected + L"\", got: \"" + actual + L"\"");
 				}
 			case error_level::ERR_LVL_WARN:
 				if (mCompileLogger) {
-					mCompileLogger->warn("Expected: \"" + expected + "\", got: \"" + actual + "\"");
+					mCompileLogger->warn(L"Expected: \"" + expected + L"\", got: \"" + actual + L"\"");
 				}
 			case error_level::ERR_LVL_ERROR:
 				if (mCompileLogger) {
-					mCompileLogger->error("Expected: \"" + expected + "\", got: \"" + actual + "\"");
+					mCompileLogger->error(L"Expected: \"" + expected + L"\", got: \"" + actual + L"\"");
 				}
 			}
 		}
@@ -365,18 +374,18 @@ namespace enkel {
 			switch (level) {
 			case error_level::ERR_LVL_DEBUG:
 				if (mCompileLogger) {
-					mCompileLogger->debug("Expected token: \"" + lexer_token::map_token(expected) +
-						"\", got: \"" + lexer_token::map_token(actual) + "\"");
+					mCompileLogger->debug(L"Expected token: \"" + lexer_token::map_token(expected) +
+						L"\", got: \"" + lexer_token::map_token(actual) + L"\"");
 				}
 			case error_level::ERR_LVL_WARN:
 				if (mCompileLogger) {
-					mCompileLogger->warn("Expected: \"" + lexer_token::map_token(expected) + 
-						"\", got: \"" + lexer_token::map_token(actual) + "\"");
+					mCompileLogger->warn(L"Expected token: \"" + lexer_token::map_token(expected) +
+						L"\", got: \"" + lexer_token::map_token(actual) + L"\"");
 				}
 			case error_level::ERR_LVL_ERROR:
 				if (mCompileLogger) {
-					mCompileLogger->error("Expected: \"" + lexer_token::map_token(expected) + 
-						"\", got: \"" + lexer_token::map_token(actual) + "\"");
+					mCompileLogger->error(L"Expected token: \"" + lexer_token::map_token(expected) +
+						L"\", got: \"" + lexer_token::map_token(actual) + L"\"");
 				}
 			}
 		}

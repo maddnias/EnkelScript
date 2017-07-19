@@ -8,7 +8,7 @@ namespace enkel {
 		class module_node : public base_node
 		{
 		public:
-			module_node(const std::string &name)
+			module_node(const std::wstring &name)
 				: mName(name) {
 			}
 
@@ -16,15 +16,11 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			std::string dump() override {
-				return "";
-			}
-
 			void add_elem(std::unique_ptr<module_elem_node> elem) {
 				mElems.push_back(move(elem));
 			}
 
-			const std::string &get_name() {
+			const std::wstring &get_name() const {
 				return mName;
 			}
 
@@ -34,7 +30,7 @@ namespace enkel {
 
 		private:
 			std::vector<std::unique_ptr<module_elem_node>> mElems;
-			std::string mName;
+			std::wstring mName;
 		};
 	}
 }

@@ -19,10 +19,6 @@ namespace enkel {
 				  mRhs(move(rhs)) {
 			}
 
-			std::string dump() override {
-				return "";
-			}
-
 			std::unique_ptr<base_node>& get_lhs() {
 				return mLhs;
 			}

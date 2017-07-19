@@ -5,7 +5,7 @@
 #include "var_expr_node.h"
 #include "bin_expr_node.h"
 #include "return_expr_node.h"
-#include "number_expr_node.h"
+#include "const_expr_node.h"
 #include "assignment_stmt_node.h"
 #include "param_list_node.h"
 #include "func_decl_node.h"

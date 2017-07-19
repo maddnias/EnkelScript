@@ -23,7 +23,6 @@ namespace enkel {
 			}
 
 			void accept(base_ast_visitor &visitor) override = 0;
-			std::string dump() override = 0;
 		protected:
 			runtime::variant_datatype mVal;
 		};

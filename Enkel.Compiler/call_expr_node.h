@@ -8,7 +8,7 @@ namespace enkel {
 		class call_expr_node
 			: public expr_node {
 		public:
-			call_expr_node(std::string &target)
+			call_expr_node(std::wstring &target)
 				: mIsStl(enkel_stl::is_stl_func(target)),
 				  mTargetFunc(target) {
 			}
@@ -25,20 +25,17 @@ namespace enkel {
 				return mIsStl;
 			}
 
-			std::string& get_target_name() {
+			std::wstring& get_target_name() {
 				return mTargetFunc;
 			}
 
 			void accept(base_ast_visitor &visitor) override {
 				visitor.visit(*this);
 			}
-			std::string dump() override {
-				return "";
-			}
-			
+
 		private:
 			bool mIsStl;
-			std::string mTargetFunc;
+			std::wstring mTargetFunc;
 			std::vector<std::unique_ptr<base_node>> mArgs;
 		};
 	}

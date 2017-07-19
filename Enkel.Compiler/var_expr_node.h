@@ -6,15 +6,11 @@ namespace enkel {
 	namespace compiler {
 		class var_expr_node : public expr_node {
 		public:
-			var_expr_node(const std::string &name)
+			var_expr_node(const std::wstring &name)
 				: mName(name) {
 			}
 
-			const std::string &get_name() const {
-				return mName;
-			}
-
-			std::string dump() override {
+			const std::wstring &get_name() const {
 				return mName;
 			}
 
@@ -22,7 +18,7 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 		private:
-			std::string mName;
+			std::wstring mName;
 		};
 	}
 }

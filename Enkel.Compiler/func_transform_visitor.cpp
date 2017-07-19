@@ -7,21 +7,13 @@ using namespace std;
 
 namespace enkel {
 	namespace compiler {
-		func_transform_visitor::func_transform_visitor() {
-		}
-
-		func_transform_visitor::~func_transform_visitor() {
-		}
-
-		module_node& func_transform_visitor::visit(module_node &node) {
+		void func_transform_visitor::visit(module_node &node) {
 			for (auto &elem : node.get_elems()) {
 				elem->accept(*this);
 			}
-
-			return node;
 		}
 
-		module_elem_node& func_transform_visitor::visit(module_elem_node &node) {
+		void func_transform_visitor::visit(module_elem_node &node) {
 			vector<int> transferredIndices;
 			int idx = 0;
 			for (auto &elem : node.get_elems()) {
@@ -41,60 +33,6 @@ namespace enkel {
 			for (auto &transferredIdx : transferredIndices) {
 				node.remove_elem(transferredIdx - removedCount++);
 			}
-
-			return node;
-		}
-
-		block_node& func_transform_visitor::visit(block_node &node) {
-			return node;
-		}
-
-		param_node& func_transform_visitor::visit(param_node &node) {
-			return node;
-		}
-
-		assignment_stmt_node& func_transform_visitor::visit(assignment_stmt_node &node) {
-			return node;
-		}
-
-		assign_expr_node& func_transform_visitor::visit(assign_expr_node &node) {
-			return node;
-		}
-
-		bin_expr_node& func_transform_visitor::visit(bin_expr_node &node) {
-			return node;
-		}
-
-		func_decl_node& func_transform_visitor::visit(func_decl_node &node) {
-			return node;
-		}
-
-		func_node& func_transform_visitor::visit(func_node &node) {
-			return node;
-		}
-
-		number_expr_node& func_transform_visitor::visit(number_expr_node &node) {
-			return node;
-		}
-
-		return_expr_node& func_transform_visitor::visit(return_expr_node &node) {
-			return node;
-		}
-
-		var_decl_expr_node& func_transform_visitor::visit(var_decl_expr_node &node) {
-			return node;
-		}
-
-		var_expr_node& func_transform_visitor::visit(var_expr_node &node) {
-			return node;
-		}
-
-		param_list_node& func_transform_visitor::visit(param_list_node &node) {
-			return node;
-		}
-
-		call_expr_node& func_transform_visitor::visit(call_expr_node &node) {
-			return node;
 		}
 
 		vector<unique_ptr<func_decl_node>> func_transform_visitor::get_decls() {

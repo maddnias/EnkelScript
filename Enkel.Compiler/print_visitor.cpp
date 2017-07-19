@@ -7,7 +7,7 @@ using namespace std;
 
 namespace enkel {
 	namespace compiler {
-		print_visitor::print_visitor(std::ostream &outStream)
+		print_visitor::print_visitor(wostream &outStream)
 			: mOutStream(outStream),
 			  mIndent(0) {
 		}
@@ -15,136 +15,107 @@ namespace enkel {
 		print_visitor::~print_visitor() {
 		}
 
-		module_node& print_visitor::visit(module_node &node) {
-			print(node.get_name(), " {", NL);
+		void print_visitor::visit(module_node &node) {
+			print(node.get_name(), L" {", NL);
 			indent();
 			for (auto &elem : node.get_elems()) {
 				elem->accept(*this);
 			}
 			de_indent();
-			print("}");
-
-			return node;
+			print(L"}");
 		}
 
-		module_elem_node& print_visitor::visit(module_elem_node &node) {
+		void print_visitor::visit(module_elem_node &node) {
 			for (auto &elem : node.get_elems()) {
 				elem->accept(*this);
 			}
-
-			return node;
 		}
 
-		block_node& print_visitor::visit(block_node &node) {
+		void print_visitor::visit(block_node &node) {
 			for (auto &stmt : node.get_statements()) {
 				stmt->accept(*this);
 			}
-
-			return node;
 		}
 
-		param_node& print_visitor::visit(param_node &node) {
+		void print_visitor::visit(param_node &node) {
 			print(node.get_name());
-
-			return node;
 		}
 
-		assignment_stmt_node& print_visitor::visit(assignment_stmt_node &node) {
-			print(" = ");
-
-			return node;
+		void print_visitor::visit(assignment_stmt_node &node) {
+			print(L" = ");
 		}
 
-		assign_expr_node& print_visitor::visit(assign_expr_node &node) {
-
-			return node;
+		void print_visitor::visit(assign_expr_node &node) {
 		}
 
-		bin_expr_node& print_visitor::visit(bin_expr_node &node) {
+		void print_visitor::visit(bin_expr_node &node) {
 			node.get_lhs()->accept(*this);
 			switch (node.get_op()) {
-			case bin_expr_node::BIN_OP_PLUS: 
-				print(" + ");
+			case bin_expr_node::BIN_OP_PLUS:
+				print(L" + ");
 				break;
 			}
 			node.get_rhs()->accept(*this);
-
-			return node;
 		}
 
-		call_expr_node& print_visitor::visit(call_expr_node &node) {
-			return node;
+		void print_visitor::visit(call_expr_node &node) {
 		}
 
 
-		func_decl_node& print_visitor::visit(func_decl_node &node) {
-			print("func ", node.get_name());
+		void print_visitor::visit(func_decl_node &node) {
+			print(L"func ", node.get_name());
 			int curIndent = reset_indent();
 			node.get_params()->accept(*this);
 			mIndent = curIndent;
 			indent();
 			node.get_body()->accept(*this);
 			de_indent();
-			print("end", NL);
-
-			return node;
+			print(L"end", NL);
 		}
 
-		func_node& print_visitor::visit(func_node &node) {
-
-			return node;
+		void print_visitor::visit(func_node &node) {
 		}
 
-		number_expr_node& print_visitor::visit(number_expr_node &node) {
+		void print_visitor::visit(const_expr_node &node) {
 			print(node.get_val());
-
-			return node;
 		}
 
-		return_expr_node& print_visitor::visit(return_expr_node &node) {
-			print("return ");
+		void print_visitor::visit(return_expr_node &node) {
+			print(L"return ");
 			int curIndent = reset_indent();
 			node.get_ret_expr()->accept(*this);
 			mIndent = curIndent;
 			print(NL);
-
-			return node;
 		}
 
-		var_decl_expr_node& print_visitor::visit(var_decl_expr_node &node) {
+		void print_visitor::visit(var_decl_expr_node &node) {
 			print(node.get_scope_decl(), node.get_name());
 			if (node.get_init_expr()) {
 				int curIndent = reset_indent();
-				print(" = ");
+				print(L" = ");
 				node.get_init_expr()->accept(*this);
 				mIndent = curIndent;
 			}
 			print(NL);
-
-			return node;
 		}
 
-		var_expr_node& print_visitor::visit(var_expr_node &node) {
+		void print_visitor::visit(var_expr_node &node) {
 			print(node.get_name());
-
-			return node;
 		}
 
-		param_list_node& print_visitor::visit(param_list_node &node) {
-			print("(");
+		void print_visitor::visit(param_list_node &node) {
+			print(L"(");
 			int curIndent = reset_indent();
 			int paramCount = node.get_params().size();
 			int cur = 0;
 			for (auto &param : node.get_params()) {
 				param->accept(*this);
 				if (++cur < paramCount) {
-					print(", ");
+					print(L", ");
 				}
 			}
 			mIndent = curIndent;
-			print(")", NL);
-
-			return node;
+			print(L")", NL);
 		}
 
 
@@ -162,10 +133,10 @@ namespace enkel {
 			mIndent--;
 		}
 
-		string print_visitor::get_indent() const {
-			string indent;
+		wstring print_visitor::get_indent() const {
+			wstring indent;
 			for (int i = 0; i < mIndent; i++) {
-				indent += "\t";
+				indent += L"\t";
 			}
 			return indent;
 		}

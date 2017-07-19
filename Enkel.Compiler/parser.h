@@ -2,10 +2,11 @@
 #include "lexer.h"
 #include "func_node.h"
 #include "compiler_logger.h"
-#include "compiler_type.h"
+
 #include "var_decl_expr_node.h"
 #include "block_node.h"
 #include "module_elem_node.h"
+#include <map>
 
 namespace enkel {
 	namespace compiler {
@@ -20,7 +21,7 @@ namespace enkel {
 			std::shared_ptr<lexer_token> peek_next_token(int count = 1) const;
 			std::unique_ptr<module_node> parse_module();
 			void reset();
-			std::shared_ptr<lexer_token> get_cur_token();
+			std::shared_ptr<lexer_token> get_cur_token() const;
 			std::unique_ptr<base_node> parse_expr();
 
 
@@ -29,7 +30,6 @@ namespace enkel {
 			using FuncDeclVec = std::unique_ptr<std::vector<std::unique_ptr<func_decl_node>>>;
 			using ParamsVec = std::unique_ptr<std::vector<std::unique_ptr<param_node>>>;
 			using error_level = compiler_logger::error_level;
-			using type = compiler_type::type;
 
 			std::unique_ptr<param_list_node> parse_params();
 			std::unique_ptr<base_node> parse_unary();
@@ -42,12 +42,13 @@ namespace enkel {
 			std::unique_ptr<block_node> parse_block();
 			std::unique_ptr<base_node> parse_var_decl();
 			std::unique_ptr<base_node> parse_number();
+			std::unique_ptr<base_node> parse_literal();
 			std::unique_ptr<base_node> parse_primary();
 			std::unique_ptr<base_node> parse_call_expr();
 			std::vector<std::unique_ptr<base_node>> parse_arg_list();
 
 			int get_tok_prec();
-			void expect(const std::string &expected, std::string &actual, error_level level) const;
+			void expect(const std::wstring &expected, std::wstring &actual, error_level level) const;
 			void expect(lexer_tok_type expected, lexer_tok_type actual, error_level level) const;
 
 			std::unique_ptr<lexer> mLexer;

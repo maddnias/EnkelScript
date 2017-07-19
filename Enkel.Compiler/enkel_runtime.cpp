@@ -12,17 +12,17 @@ using namespace std;
 namespace enkel {
 	namespace runtime {
 		enkel_runtime::enkel_runtime()
-			: mOutStream(cout) /* use cout as default */ {
+			: mOutStream(wcout) /* use wcout as default */ {
 		}
 
-		enkel_runtime::enkel_runtime(ostream &outStream)
+		enkel_runtime::enkel_runtime(wostream &outStream)
 			: mOutStream(outStream) {
 		}
 
 		enkel_runtime::~enkel_runtime() {
 		}
 
-		void enkel_runtime::exec(unique_ptr<istream> data) {
+		void enkel_runtime::exec(unique_ptr<wistream> data) {
 			auto lex = make_unique<compiler::lexer>();
 			if (!lex->initialize(data)) {
 				throw runtime_error("Failed to initialize enkel lexer");
@@ -35,8 +35,8 @@ namespace enkel {
 			auto mod = make_shared<enkel_module>();
 
 			auto root = srcParser.parse_module();
-			cout << "Module AST:" << endl << endl;
-			compiler::print_visitor printer(cout);
+			wcout << L"Module AST:" << endl << endl;
+			compiler::print_visitor printer(wcout);
 			root->accept(printer);
 			compiler::func_transform_visitor extractor;
 			root->accept(extractor);
@@ -48,14 +48,14 @@ namespace enkel {
 
 			mLoadedModules.push_back(mod);
 
-			cout << endl << endl << "Executing script:" << endl << endl;
+			wcout << endl << endl << L"Executing script:" << endl << endl;
 
 			exec_visitor exec(*this);
 			root->accept(exec);
 		}
 
 
-		void enkel_runtime::exec_file(const string &file) {
+		void enkel_runtime::exec_file(const wstring &file) {
 		}
 
 		void enkel_runtime::scope_increase() {
@@ -70,25 +70,25 @@ namespace enkel {
 			return mScopes.back();
 		}
 
-		variant_datatype& enkel_runtime::get_var(string ident) {
+		variant_datatype& enkel_runtime::get_var(wstring ident) {
 			if (mGlobalScope.var_exists(ident)) {
 				return mGlobalScope.get_var(ident);
 			}
 			return get_current_scope().get_var(ident);
 		}
 
-		void enkel_runtime::set_var(string ident, variant_datatype &data) {
+		void enkel_runtime::set_var(wstring ident, variant_datatype &data) {
 			if (mGlobalScope.var_exists(ident)) {
 				return mGlobalScope.set_var(ident, data);
 			}
 			return get_current_scope().set_var(ident, data);
 		}
 
-		ostream& enkel_runtime::get_ostream() const {
+		wostream& enkel_runtime::get_ostream() const {
 			return mOutStream;
 		}
 
-		unique_ptr<compiler::func_decl_node>& enkel_runtime::resolve_func(string &name) {
+		unique_ptr<compiler::func_decl_node>& enkel_runtime::resolve_func(wstring &name) {
 			for(auto &mod : mLoadedModules) {
 				if(mod->func_exists(name)) {
 					return mod->resolve_func(name);
@@ -110,7 +110,7 @@ namespace enkel {
 			while (!eofReached) {
 				auto tok = parser.next_token();
 				unique_ptr<compiler::func_node> func;
-				string funcName;
+				wstring funcName;
 
 				switch (tok->get_type()) {
 

@@ -6,7 +6,7 @@ namespace enkel {
 		class param_node : public base_node {
 
 		public:
-			param_node(const std::string &ident)
+			param_node(const std::wstring &ident)
 				: mIdent(ident) {
 
 			}
@@ -14,17 +14,13 @@ namespace enkel {
 			void accept(base_ast_visitor &visitor) override {
 				visitor.visit(*this);
 			}
-			
-			std::string dump() override {
-				return "";
-			}
 
-			const std::string& get_name() const {
+			const std::wstring& get_name() const {
 				return mIdent;
 			}
 
 		private:
-			std::string mIdent;
+			std::wstring mIdent;
 		};
 	}
 }

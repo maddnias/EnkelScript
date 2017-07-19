@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <istream>
+#include <fstream>
 #include <sstream>
 
 #include <iostream>
@@ -10,14 +11,17 @@
 #include "module_node.h"
 
 
-std::string test =
-"myVar1 = 10\r\n"
-"myVar2 = 100\r\n"
+std::wstring test =
+L"myVar1 = 10\r\n"
+"myVar2 = \"150\"\r\n"
 "myVar3 = myVar1 + myVar2\r\n"
 "print(myVar3)";
 
 int main() {
-	std::unique_ptr<std::istream> testa(new std::istringstream(test));
+	__int64 lul = LLONG_MAX;
+	double lil = LLONG_MAX;
+
+	std::unique_ptr<std::wistream> testa(new std::wifstream("C:\\script.es"));
 
 	enkel::runtime::enkel_runtime rt;
 	rt.exec(move(testa));

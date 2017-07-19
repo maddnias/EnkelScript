@@ -42,9 +42,6 @@
     <ClInclude Include="func_node.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
-    <ClInclude Include="number_expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
     <ClInclude Include="var_decl_expr_node.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
@@ -64,9 +61,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="compiler_logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="compiler_type.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="enkel_runtime.h">
@@ -129,6 +123,9 @@
     <ClInclude Include="func_transform_visitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="const_expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -147,9 +144,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="compiler_err_logger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="compiler_type.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="enkel_runtime.cpp">

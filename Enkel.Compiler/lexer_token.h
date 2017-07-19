@@ -3,28 +3,31 @@
 #include <unordered_map>
 #include <cassert>
 
+
 namespace enkel {
 	namespace compiler {
-		static std::unordered_map<int, std::string> mTokMappings = {
-			{ 0, "TOK_EOF" },
-			{ 1, "TOK_FUNC_DEF" },
-			{ 2, "TOK_END" },
-			{ 3, "TOK_IDENTIFIER" },
-			{ 4, "TOK_NUMBER" },
-			{ 5, "TOK_UNK" },
-			{ 6, "TOK_OPEN_PARENTH" },
-			{ 7, "TOK_CLOSE_PARENTH" },
-			{ 8, "TOK_COMMENT" },
-			{ 9, "TOK_TYPE_DECL" },
-			{ 10, "TOK_VAR_DECL" },
-			{ 11, "TOK_FUNC_TYPE_DECL" },
-			{ 12, "TOK_KEYWORD" },
-			{ 13, "TOK_COMMA" },
-			{ 14, "TOK_ASSIGN" },
-			{ 15, "TOK_EQU" },
-			{ 16, "TOK_OP_UNARY" },
-			{ 17, "TOK_OP_BIN" },
-			{ 18, "TOK_VAR_DECL_SCOPE"}
+		static std::unordered_map<int, std::wstring> mTokMappings = {
+			{ 0, _T("TOK_EOF") },
+			{ 1, _T("TOK_FUNC_DEF") },
+			{ 2, _T("TOK_END") },
+			{ 3, _T("TOK_IDENTIFIER") },
+			{ 4, _T("TOK_NUMBER") },
+			{ 5, _T("TOK_UNK") },
+			{ 6, _T("TOK_OPEN_PARENTH") },
+			{ 7, _T("TOK_CLOSE_PARENTH") },
+			{ 8, _T("TOK_COMMENT") },
+			{ 9, _T("TOK_TYPE_DECL") },
+			{ 10, _T("TOK_VAR_DECL") },
+			{ 11, _T("TOK_FUNC_TYPE_DECL") },
+			{ 12, _T("TOK_KEYWORD") },
+			{ 13, _T("TOK_COMMA") },
+			{ 14, _T("TOK_ASSIGN") },
+			{ 15, _T("TOK_EQU") },
+			{ 16, _T("TOK_OP_UNARY") },
+			{ 17, _T("TOK_OP_BIN") },
+			{ 18, _T("TOK_VAR_DECL_SCOPE") },
+			{ 19, _T("TOK_LITERAL") },
+			{ 20, _T("TOK_DQUOTE") }
 		};
 
 		enum lexer_tok_type : int {
@@ -46,13 +49,15 @@ namespace enkel {
 			TOK_EQU,
 			TOK_OP_UNARY,
 			TOK_OP_BIN,
-			TOK_VAR_DECL_SCOPE
+			TOK_VAR_DECL_SCOPE,
+			TOK_LITERAL,
+			TOK_DQUOTE
 		};
 
 		class lexer_token {
 		public:
 			lexer_token();
-			lexer_token(const lexer_tok_type &tokType, const std::string data,
+			lexer_token(const lexer_tok_type &tokType, const std::wstring data,
 				const unsigned int col, const unsigned int row);
 			~lexer_token();
 
@@ -62,20 +67,20 @@ namespace enkel {
 				return stoi(mLexeme);
 			}
 
-			const std::string& get_lexeme_str() const {
+			const std::wstring& get_lexeme_str() const {
 				return mLexeme;
 			}
 
-			static std::string &map_token(lexer_tok_type type) {
+			static std::wstring &map_token(lexer_tok_type type) {
 				assert(mTokMappings.find(type) != mTokMappings.end());
 				return mTokMappings[0];
 			}
 
-			std::string dump() const;
+			std::wstring dump() const;
 
 		private:
 			lexer_tok_type mTokType;
-			std::string mLexeme;
+			std::wstring mLexeme;
 			unsigned int mCol;
 			unsigned int mRow;
 		};

@@ -6,7 +6,7 @@ namespace enkel {
 		rt_var::rt_var() {
 		}
 
-		rt_var::rt_var(std::string &name)
+		rt_var::rt_var(std::wstring &name)
 			: mData(),
 			mName(name) {
 		}
@@ -14,7 +14,7 @@ namespace enkel {
 		rt_var::~rt_var() {
 		}
 
-		std::string& rt_var::get_name() {
+		std::wstring& rt_var::get_name() {
 			return mName;
 		}
 

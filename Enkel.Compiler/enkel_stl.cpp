@@ -4,11 +4,11 @@
 using namespace std;
 
 namespace enkel {
-	vector<string> enkel_stl::mStlFuncNames = { 
-		"print"
+	vector<wstring> enkel_stl::mStlFuncNames = { 
+		L"print"
 	};
 
-	bool enkel_stl::is_stl_func(string &name) {
+	bool enkel_stl::is_stl_func(wstring &name) {
 		for(auto &stlFuncName : mStlFuncNames) {
 			if(stlFuncName == name) {
 				return true;
@@ -17,7 +17,7 @@ namespace enkel {
 		return false;
 	}
 
-	void enkel_stl::print(std::ostream &outStream, runtime::variant_datatype &data) {
+	void enkel_stl::print(wostream &outStream, runtime::variant_datatype &data) {
 		outStream << data;
 	}
 }

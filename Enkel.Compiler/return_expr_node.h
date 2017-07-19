@@ -9,10 +9,6 @@ namespace enkel {
 				: mRetExpr(move(retExpr)) {
 			}
 
-			std::string dump() override {
-				return "return " + mRetExpr->dump();
-			}
-
 			void accept(base_ast_visitor &visitor) override {
 				visitor.visit(*this);
 			}

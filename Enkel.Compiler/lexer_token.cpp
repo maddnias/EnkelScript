@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "lexer_token.h"
 
-using std::to_string;
 
 namespace enkel {
 	namespace compiler {
@@ -11,7 +10,8 @@ namespace enkel {
 			mRow(0) {
 		}
 
-		lexer_token::lexer_token(const lexer_tok_type & tokType, const std::string data, const unsigned int col, const unsigned int row)
+		lexer_token::lexer_token(const lexer_tok_type & tokType, const std::wstring data,
+			const unsigned int col, const unsigned int row)
 			: mTokType(tokType),
 			mLexeme(data),
 			mCol(col),
@@ -24,9 +24,9 @@ namespace enkel {
 			return mTokType;
 		}
 
-		std::string lexer_token::dump() const {
-			return "TOKEN: " + mTokMappings[mTokType] + ": \"" + mLexeme + "\" @ (" + to_string(mRow)
-				+ ":" + to_string(mCol) + ")";
+		std::wstring lexer_token::dump() const {
+			return L"TOKEN: " + mTokMappings[mTokType] + L": \"" + mLexeme + L"\" @ (" + std::to_wstring(mRow)
+				+ L":" + std::to_wstring(mCol) + L")";
 		}
 	}
 }

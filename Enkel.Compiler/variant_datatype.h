@@ -16,6 +16,7 @@ namespace enkel {
 			};
 
 			variant_datatype();
+			variant_datatype(std::wstring val);
 			variant_datatype(int val);
 			~variant_datatype();
 
@@ -24,10 +25,10 @@ namespace enkel {
 			variant_datatype& operator=(__int64 i64dat);
 			variant_datatype& operator=(void *ptrDat);
 			variant_datatype& operator=(double floatDat);
-			variant_datatype& operator=(std::string strDat);
+			variant_datatype& operator=(std::wstring strDat);
 			variant_datatype& operator+(variant_datatype &other);
 
-			friend std::ostream& operator<<(std::ostream& os, const variant_datatype &var);
+			friend std::wostream& operator<<(std::wostream& os, const variant_datatype &var);
 
 			var_type get_type() const;
 
@@ -36,10 +37,10 @@ namespace enkel {
 			void reset_var();
 			static bool ensure_addition_possible(var_type lType, var_type rType);
 			bool ensure_type(var_type type) const;
-			std::string to_string() const;
+			std::wstring to_string() const;
 
 			var_type mType;
-			std::string mStrVal;
+			std::wstring mStrVal;
 			int mI32Val;
 			__int64 mI64Val;
 			double mFVal;

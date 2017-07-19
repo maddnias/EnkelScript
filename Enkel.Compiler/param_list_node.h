@@ -15,8 +15,6 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			std::string dump() override { return ""; }
-
 			std::vector<std::unique_ptr<param_node>>& get_params() {
 				return mNodes;
 			}

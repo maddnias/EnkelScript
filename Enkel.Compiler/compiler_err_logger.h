@@ -8,9 +8,9 @@ namespace enkel {
 		public:
 			compiler_err_logger();
 			~compiler_err_logger();
-			void debug(std::string &data) override;
-			void warn(std::string &data) override;
-			void error(std::string &data) override;
+			void debug(std::wstring &data) override;
+			void warn(std::wstring &data) override;
+			void error(std::wstring &data) override;
 		};
 	}
 }

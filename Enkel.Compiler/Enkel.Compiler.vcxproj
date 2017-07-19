@@ -151,7 +151,6 @@
     <ClInclude Include="call_expr_node.h" />
     <ClInclude Include="compiler_err_logger.h" />
     <ClInclude Include="compiler_logger.h" />
-    <ClInclude Include="compiler_type.h" />
     <ClInclude Include="enkel_module.h" />
     <ClInclude Include="enkel_runtime.h" />
     <ClInclude Include="enkel_stl.h" />
@@ -165,7 +164,7 @@
     <ClInclude Include="module_elem_node.h" />
     <ClInclude Include="module_node.h" />
     <ClInclude Include="nodes.h" />
-    <ClInclude Include="number_expr_node.h" />
+    <ClInclude Include="const_expr_node.h" />
     <ClInclude Include="param_list_node.h" />
     <ClInclude Include="param_node.h" />
     <ClInclude Include="parser.h" />
@@ -181,7 +180,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="compiler_err_logger.cpp" />
-    <ClCompile Include="compiler_type.cpp" />
     <ClCompile Include="Enkel.Compiler.cpp" />
     <ClCompile Include="enkel_module.cpp" />
     <ClCompile Include="enkel_runtime.cpp" />

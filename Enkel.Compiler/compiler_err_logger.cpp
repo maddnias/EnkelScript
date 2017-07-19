@@ -12,13 +12,13 @@ namespace enkel {
 		{
 		}
 
-		void compiler_err_logger::debug(std::string &data) {
+		void compiler_err_logger::debug(std::wstring &data) {
 		}
 
-		void compiler_err_logger::warn(std::string &data) {
+		void compiler_err_logger::warn(std::wstring &data) {
 		}
 
-		void compiler_err_logger::error(std::string &data) {
+		void compiler_err_logger::error(std::wstring &data) {
 		}
 	}
 }

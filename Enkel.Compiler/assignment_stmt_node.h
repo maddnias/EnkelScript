@@ -18,10 +18,6 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			std::string dump() override {
-				return "";
-			}
-
 		private:
 			std::unique_ptr<base_node> mLhs;
 			std::unique_ptr<base_node> mRhs;

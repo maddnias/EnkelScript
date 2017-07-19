@@ -1,5 +1,5 @@
 #pragma once
-#include "compiler_type.h"
+
 #include "base_ast_visitor.h"
 #include <memory>
 
@@ -14,9 +14,6 @@ namespace enkel {
 				
 			}
 			virtual void accept(base_ast_visitor &visitor) = 0;
-			virtual std::string dump() = 0;
-		protected:
-			typedef compiler_type::type type;
 		};
 	}
 }

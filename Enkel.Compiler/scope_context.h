@@ -11,12 +11,12 @@ namespace enkel {
 			scope_context();
 			~scope_context();
 
-			void set_var(std::string ident, variant_datatype data);
-			variant_datatype& get_var(std::string ident);
-			bool var_exists(const std::string & ident);
+			void set_var(std::wstring ident, variant_datatype data);
+			variant_datatype& get_var(std::wstring ident);
+			bool var_exists(const std::wstring & ident);
 
 		private:
-			std::shared_ptr<rt_var> find_var(std::string ident);
+			std::shared_ptr<rt_var> find_var(std::wstring ident);
 
 			std::vector<std::shared_ptr<rt_var>> mVars;
 		};

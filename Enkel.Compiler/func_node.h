@@ -14,10 +14,6 @@ namespace enkel {
 
 			}
 
-			std::string dump() override {
-				return "";
-			}
-
 			const func_decl_node &get_decl() const {
 				return *mDecl;
 			}
@@ -26,7 +22,7 @@ namespace enkel {
 				return *mBody;
 			}
 
-			std::string get_name() {
+			std::wstring get_name() {
 				return mDecl->get_name();
 			}
 

@@ -8,16 +8,16 @@ namespace enkel {
 		{
 		public:
 			rt_var();
-			rt_var(std::string &name);
+			rt_var(std::wstring &name);
 			~rt_var();
 			
-			std::string &get_name();
+			std::wstring &get_name();
 			variant_datatype &get_data();
 			void set_data(const variant_datatype& data);
 
 		private:
 			variant_datatype mData;
-			std::string mName;
+			std::wstring mName;
 		};
 	}
 }

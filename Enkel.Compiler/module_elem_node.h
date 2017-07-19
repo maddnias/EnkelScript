@@ -14,10 +14,6 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			std::string dump() override {
-				return "";
-			}
-
 			void add_node(std::unique_ptr<base_node> &node) {
 				mNodes.push_back(move(node));
 			}

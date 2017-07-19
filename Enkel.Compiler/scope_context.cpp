@@ -13,16 +13,16 @@ namespace enkel {
 		scope_context::~scope_context() {
 		}
 
-		variant_datatype& scope_context::get_var(string ident) {
+		variant_datatype& scope_context::get_var(wstring ident) {
 			assert(find_var(ident));
 			return find_var(ident)->get_data();
 		}
 
-		bool scope_context::var_exists(const string &ident) {
+		bool scope_context::var_exists(const wstring &ident) {
 			return find_var(ident) != nullptr;
 		}
 
-		shared_ptr<rt_var> scope_context::find_var(string ident) {
+		shared_ptr<rt_var> scope_context::find_var(wstring ident) {
 			for (auto varIt : mVars) {
 				if (varIt->get_name() == ident) {
 					return varIt;
@@ -32,7 +32,7 @@ namespace enkel {
 		}
 
 		//TODO: optimize
-		void scope_context::set_var(string ident, variant_datatype data) {
+		void scope_context::set_var(wstring ident, variant_datatype data) {
 			if(!find_var(ident)) {
 				mVars.push_back(make_shared<rt_var>(ident));
 			}

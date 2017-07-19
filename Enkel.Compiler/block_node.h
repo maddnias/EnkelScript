@@ -15,10 +15,6 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			std::string dump() override {
-				return "";
-			}
-
 			void add_stmt(std::unique_ptr<base_node> stmt) {
 				mStatements.push_back(move(stmt));
 			}

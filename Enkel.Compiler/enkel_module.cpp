@@ -12,7 +12,7 @@ namespace enkel {
 		enkel_module::~enkel_module() {
 		}
 
-		bool enkel_module::func_exists(std::string &name) {
+		bool enkel_module::func_exists(wstring &name) {
 			return mFuncTbl.find(name) != mFuncTbl.end();
 		}
 
@@ -22,7 +22,7 @@ namespace enkel {
 			mFuncTbl[pFunc->get_name()] = move(pFunc);
 		}
 
-		unique_ptr<compiler::func_decl_node>& enkel_module::resolve_func(string &name) {
+		unique_ptr<compiler::func_decl_node>& enkel_module::resolve_func(wstring &name) {
 			FuncTable::iterator foundFunc;
 			if ((foundFunc = mFuncTbl.find(name)) != mFuncTbl.end()) {
 				return foundFunc->second;

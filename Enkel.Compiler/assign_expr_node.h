@@ -11,13 +11,6 @@ namespace enkel {
 				  mRhs(move(rhs)) {
 			}
 
-	/*		llvm::Value * codegen(enkel_jit &jit) override {
-				return nullptr; 
-			}*/
-			std::string dump() override {
-				return mLhs->dump() + " " + mRhs->dump();
-			}
-
 			void accept(base_ast_visitor &visitor) override {}
 		private:
 			std::unique_ptr<base_node> mLhs;

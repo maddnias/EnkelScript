@@ -16,9 +16,9 @@ namespace enkel {
 			compiler_logger() {}
 		//	virtual ~compiler_logger();
 			
-			virtual void debug(std::string &data) = 0;
-			virtual void warn(std::string &data) = 0;
-			virtual void error(std::string &data) = 0;
+			virtual void debug(std::wstring &data) = 0;
+			virtual void warn(std::wstring &data) = 0;
+			virtual void error(std::wstring &data) = 0;
 		};
 	}
 }

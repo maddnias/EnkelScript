@@ -5,21 +5,15 @@
 
 namespace enkel {
 	namespace compiler {
-		class number_expr_node : public expr_node {
+		class const_expr_node : public expr_node {
 		public:
-			number_expr_node(int val)
-				: expr_node(runtime::variant_datatype(val)) {
-			}
-
-			std::string dump() override {
-				return "";
+			const_expr_node(runtime::variant_datatype val)
+				: expr_node(val) {
 			}
 
 			void accept(base_ast_visitor &visitor) override {
 				visitor.visit(*this);
 			}
-
-		private:
 		};
 	}
 }

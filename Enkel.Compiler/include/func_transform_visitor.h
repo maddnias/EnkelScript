@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 #include <memory>
 #include "nodes.h"
+#include <vector>
 
 namespace enkel {
 	namespace compiler {

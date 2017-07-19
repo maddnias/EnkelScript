@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "exec_visitor.h"
-#include "nodes.h"
 #include <cassert>
 #include "enkel_runtime.h"
+#include "exec_visitor.h"
+#include "nodes.h"
 
 using namespace enkel::compiler;
 using namespace std;

@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "scope_context.h"
 #include <cassert>
+#include "scope_context.h"
 
 using namespace std;
 

@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "lexer.h"
-#include <memory>
 #include <cassert>
 #include <codecvt>
+#include "lexer.h"
+#include <memory>
 
 using namespace std;
 

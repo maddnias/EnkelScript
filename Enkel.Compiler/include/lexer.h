@@ -1,6 +1,6 @@
 #pragma once
-#include <memory>
 #include "lexer_token.h"
+#include <memory>
 
 #ifdef UNICODE
 #define ENKEL_EOF WEOF

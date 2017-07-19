@@ -1,6 +1,6 @@
 #pragma once
-#include "func_decl_node.h"
 #include "base_node.h"
+#include "func_decl_node.h"
 #include <memory>
 
 namespace enkel {

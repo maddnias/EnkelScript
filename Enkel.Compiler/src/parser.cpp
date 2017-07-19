@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "parser.h"
 #include "lexer.h"
 #include "nodes.h"
+#include "parser.h"
 
 using namespace std;
 

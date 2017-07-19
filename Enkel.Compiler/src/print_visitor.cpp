@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "print_visitor.h"
 #include "nodes.h"
+#include "print_visitor.h"
 #include <string>
 
 using namespace std;

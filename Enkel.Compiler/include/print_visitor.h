@@ -1,7 +1,7 @@
 #pragma once
+#include "nodes.h"
 #include <ostream>
 #include <string>
-#include "nodes.h"
 
 #define NL L"\n"
 

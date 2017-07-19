@@ -1,8 +1,8 @@
 #pragma once
-#include "lexer.h"
 #include "compiler_logger.h"
-#include "nodes.h"
+#include "lexer.h"
 #include <map>
+#include "nodes.h"
 
 namespace enkel {
 	namespace compiler {

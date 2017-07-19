@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
-#include "rt_var.h"
 #include <memory>
+#include "rt_var.h"
+#include <vector>
 
 namespace enkel {
 	namespace runtime {

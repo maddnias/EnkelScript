@@ -1,5 +1,6 @@
 #pragma once
 #include "base_node.h"
+#include <memory>
 
 namespace enkel {
 	namespace compiler {

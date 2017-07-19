@@ -1,7 +1,7 @@
 #pragma once
+#include "enkel_stl.h"
 #include "expr_node.h"
 #include <vector>
-#include "enkel_stl.h"
 
 namespace enkel {
 	namespace compiler {

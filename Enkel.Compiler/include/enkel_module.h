@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
-#include "func_node.h"
 #include <stack>
+#include "nodes.h"
 
 namespace enkel {
 	namespace runtime {

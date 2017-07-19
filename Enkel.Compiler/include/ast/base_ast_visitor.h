@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 
 namespace enkel {
 	namespace compiler {

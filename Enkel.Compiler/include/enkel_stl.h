@@ -1,5 +1,4 @@
 #pragma once
-#include <ostream>
 #include "variant_datatype.h"
 #include <vector>
 

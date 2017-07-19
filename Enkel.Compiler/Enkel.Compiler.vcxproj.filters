@@ -14,161 +14,158 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Header Files\ast">
-      <UniqueIdentifier>{8683e678-f4fd-4b2c-be44-10a6ec24f539}</UniqueIdentifier>
+      <UniqueIdentifier>{64cb5ab5-8b10-4e06-adca-f2bae75eb41c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lexer_token.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="func_decl_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="func_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="var_decl_expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="var_expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="assign_expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="return_expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="bin_expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="compiler_err_logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="compiler_logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enkel_runtime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enkel_module.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="base_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="block_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="module_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="param_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="assignment_stmt_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="module_elem_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="base_ast_visitor.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="print_visitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="param_list_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="variant_datatype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="exec_visitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="scope_context.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rt_var.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enkel_stl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="call_expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
-    <ClInclude Include="func_transform_visitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="const_expr_node.h">
-      <Filter>Header Files\ast</Filter>
-    </ClInclude>
+    <ClCompile Include="src\rt_var.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\enkel_stl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler_err_logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lexer_token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\exec_visitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\variant_datatype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\func_transform_visitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\print_visitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\enkel_runtime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\enkel_module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scope_context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Enkel.Compiler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lexer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lexer_token.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="compiler_err_logger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="enkel_runtime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="enkel_module.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="print_visitor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="variant_datatype.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="exec_visitor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="scope_context.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rt_var.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="enkel_stl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_transform_visitor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="include\compiler_err_logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\compiler_logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\enkel_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\enkel_runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\enkel_stl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\exec_visitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\func_transform_visitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lexer_token.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\nodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\print_visitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rt_var.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scope_context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\variant_datatype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\bin_expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\block_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\call_expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\const_expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\func_decl_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\func_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\module_elem_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\module_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\param_list_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\param_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\return_expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\var_decl_expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\var_expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\assign_expr_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\assignment_stmt_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\base_ast_visitor.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ast\base_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

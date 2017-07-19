@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -139,63 +139,59 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="assignment_stmt_node.h" />
-    <ClInclude Include="assign_expr_node.h" />
-    <ClInclude Include="base_ast_visitor.h" />
-    <ClInclude Include="bin_expr_node.h" />
-    <ClInclude Include="block_node.h" />
-    <ClInclude Include="base_node.h" />
-    <ClInclude Include="call_expr_node.h" />
-    <ClInclude Include="compiler_err_logger.h" />
-    <ClInclude Include="compiler_logger.h" />
-    <ClInclude Include="enkel_module.h" />
-    <ClInclude Include="enkel_runtime.h" />
-    <ClInclude Include="enkel_stl.h" />
-    <ClInclude Include="exec_visitor.h" />
-    <ClInclude Include="expr_node.h" />
-    <ClInclude Include="func_decl_node.h" />
-    <ClInclude Include="func_transform_visitor.h" />
-    <ClInclude Include="func_node.h" />
-    <ClInclude Include="lexer.h" />
-    <ClInclude Include="lexer_token.h" />
-    <ClInclude Include="module_elem_node.h" />
-    <ClInclude Include="module_node.h" />
-    <ClInclude Include="nodes.h" />
-    <ClInclude Include="const_expr_node.h" />
-    <ClInclude Include="param_list_node.h" />
-    <ClInclude Include="param_node.h" />
-    <ClInclude Include="parser.h" />
-    <ClInclude Include="print_visitor.h" />
-    <ClInclude Include="return_expr_node.h" />
-    <ClInclude Include="rt_var.h" />
-    <ClInclude Include="scope_context.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="variant_datatype.h" />
-    <ClInclude Include="var_decl_expr_node.h" />
-    <ClInclude Include="var_expr_node.h" />
+    <ClCompile Include="src\compiler_err_logger.cpp" />
+    <ClCompile Include="src\enkel_module.cpp" />
+    <ClCompile Include="src\enkel_runtime.cpp" />
+    <ClCompile Include="src\enkel_stl.cpp" />
+    <ClCompile Include="src\exec_visitor.cpp" />
+    <ClCompile Include="src\func_transform_visitor.cpp" />
+    <ClCompile Include="src\lexer.cpp" />
+    <ClCompile Include="src\lexer_token.cpp" />
+    <ClCompile Include="src\parser.cpp" />
+    <ClCompile Include="src\print_visitor.cpp" />
+    <ClCompile Include="src\rt_var.cpp" />
+    <ClCompile Include="src\scope_context.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\variant_datatype.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="compiler_err_logger.cpp" />
-    <ClCompile Include="Enkel.Compiler.cpp" />
-    <ClCompile Include="enkel_module.cpp" />
-    <ClCompile Include="enkel_runtime.cpp" />
-    <ClCompile Include="enkel_stl.cpp" />
-    <ClCompile Include="exec_visitor.cpp" />
-    <ClCompile Include="func_transform_visitor.cpp" />
-    <ClCompile Include="lexer.cpp" />
-    <ClCompile Include="lexer_token.cpp" />
-    <ClCompile Include="parser.cpp" />
-    <ClCompile Include="print_visitor.cpp" />
-    <ClCompile Include="rt_var.cpp" />
-    <ClCompile Include="scope_context.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="variant_datatype.cpp" />
+    <ClInclude Include="include\ast\assignment_stmt_node.h" />
+    <ClInclude Include="include\ast\assign_expr_node.h" />
+    <ClInclude Include="include\ast\base_ast_visitor.h" />
+    <ClInclude Include="include\ast\base_node.h" />
+    <ClInclude Include="include\ast\bin_expr_node.h" />
+    <ClInclude Include="include\ast\block_node.h" />
+    <ClInclude Include="include\ast\call_expr_node.h" />
+    <ClInclude Include="include\ast\const_expr_node.h" />
+    <ClInclude Include="include\ast\expr_node.h" />
+    <ClInclude Include="include\ast\func_decl_node.h" />
+    <ClInclude Include="include\ast\func_node.h" />
+    <ClInclude Include="include\ast\module_elem_node.h" />
+    <ClInclude Include="include\ast\module_node.h" />
+    <ClInclude Include="include\ast\param_list_node.h" />
+    <ClInclude Include="include\ast\param_node.h" />
+    <ClInclude Include="include\ast\return_expr_node.h" />
+    <ClInclude Include="include\ast\var_decl_expr_node.h" />
+    <ClInclude Include="include\ast\var_expr_node.h" />
+    <ClInclude Include="include\compiler_err_logger.h" />
+    <ClInclude Include="include\compiler_logger.h" />
+    <ClInclude Include="include\enkel_module.h" />
+    <ClInclude Include="include\enkel_runtime.h" />
+    <ClInclude Include="include\enkel_stl.h" />
+    <ClInclude Include="include\exec_visitor.h" />
+    <ClInclude Include="include\func_transform_visitor.h" />
+    <ClInclude Include="include\lexer.h" />
+    <ClInclude Include="include\lexer_token.h" />
+    <ClInclude Include="include\nodes.h" />
+    <ClInclude Include="include\parser.h" />
+    <ClInclude Include="include\print_visitor.h" />
+    <ClInclude Include="include\rt_var.h" />
+    <ClInclude Include="include\scope_context.h" />
+    <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\targetver.h" />
+    <ClInclude Include="include\variant_datatype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

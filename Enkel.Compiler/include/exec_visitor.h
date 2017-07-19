@@ -1,7 +1,6 @@
 #pragma once
-#include "base_ast_visitor.h"
+#include "nodes.h"
 #include <vector>
-#include "base_node.h"
 
 namespace enkel {
 	namespace runtime {

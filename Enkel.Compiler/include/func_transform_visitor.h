@@ -1,8 +1,7 @@
 #pragma once
-#include "base_ast_visitor.h"
 #include <vector>
 #include <memory>
-#include "func_decl_node.h"
+#include "nodes.h"
 
 namespace enkel {
 	namespace compiler {

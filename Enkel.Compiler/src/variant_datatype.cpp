@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "variant_datatype.h"
-#include <cassert>
 
 using namespace std;
 
@@ -9,62 +8,62 @@ namespace enkel {
 	namespace runtime {
 		variant_datatype::variant_datatype()
 			: mType(VAR_TYPE_STRING),
-			mStrVal(),
-			mI32Val(0),
-			mI64Val(0),
-			mUI64Val(0),
-			mFVal(0),
-			mPtrVal(nullptr) {
+			  mStrVal(),
+			  mI32Val(0),
+			  mI64Val(0),
+			  mUI64Val(0),
+			  mFVal(0),
+			  mPtrVal(nullptr) {
 		}
 
 		variant_datatype::variant_datatype(wstring val)
 			: mType(VAR_TYPE_STRING),
-			mStrVal(val),
-			mI32Val(0),
-			mI64Val(0),
-			mUI64Val(0),
-			mFVal(0),
-			mPtrVal(nullptr) {
+			  mStrVal(val),
+			  mI32Val(0),
+			  mI64Val(0),
+			  mUI64Val(0),
+			  mFVal(0),
+			  mPtrVal(nullptr) {
 		}
 
 		variant_datatype::variant_datatype(int val)
 			: mType(VAR_TYPE_I32),
-			mStrVal(),
-			mI32Val(val),
-			mI64Val(0),
-			mUI64Val(0),
-			mFVal(0),
-			mPtrVal(nullptr) {
+			  mStrVal(),
+			  mI32Val(val),
+			  mI64Val(0),
+			  mUI64Val(0),
+			  mFVal(0),
+			  mPtrVal(nullptr) {
 		}
 
 		variant_datatype::variant_datatype(int64_t val)
 			: mType(VAR_TYPE_I64),
-			mStrVal(),
-			mI32Val(0),
-			mI64Val(val),
-			mUI64Val(0),
-			mFVal(0),
-			mPtrVal(nullptr) {
+			  mStrVal(),
+			  mI32Val(0),
+			  mI64Val(val),
+			  mUI64Val(0),
+			  mFVal(0),
+			  mPtrVal(nullptr) {
 		}
 
 		variant_datatype::variant_datatype(uint64_t val)
 			: mType(VAR_TYPE_UI64),
-			mStrVal(),
-			mI32Val(0),
-			mI64Val(0),
-			mUI64Val(val),
-			mFVal(0),
-			mPtrVal(nullptr) {
+			  mStrVal(),
+			  mI32Val(0),
+			  mI64Val(0),
+			  mUI64Val(val),
+			  mFVal(0),
+			  mPtrVal(nullptr) {
 		}
 
 		variant_datatype::variant_datatype(double val)
 			: mType(VAR_TYPE_FLOAT),
-			mStrVal(),
-			mI32Val(0),
-			mI64Val(0),
-			mUI64Val(0),
-			mFVal(val),
-			mPtrVal(nullptr) {
+			  mStrVal(),
+			  mI32Val(0),
+			  mI64Val(0),
+			  mUI64Val(0),
+			  mFVal(val),
+			  mPtrVal(nullptr) {
 		}
 
 		variant_datatype::~variant_datatype() {
@@ -132,19 +131,19 @@ namespace enkel {
 		}
 
 		variant_datatype& variant_datatype::operator+(variant_datatype &other) {
-			if(!ensure_addition_possible(mType, other.get_type())) {
+			if (!ensure_addition_possible(mType, other.get_type())) {
 				//TODO: err
 			}
 
 			int64_t i64tmp;
 			int i32tmp;
-			switch(mType) {
-			case VAR_TYPE_STRING: 
-				switch(other.get_type()) {
-				case VAR_TYPE_STRING: 
+			switch (mType) {
+			case VAR_TYPE_STRING:
+				switch (other.get_type()) {
+				case VAR_TYPE_STRING:
 					mStrVal += other.mStrVal;
 					break;
-				case VAR_TYPE_I32: 
+				case VAR_TYPE_I32:
 				case VAR_TYPE_I64:
 				case VAR_TYPE_FLOAT:
 					mStrVal += to_wstring(other.val_as_double());
@@ -153,15 +152,16 @@ namespace enkel {
 				default: ;
 				}
 				break;
-			case VAR_TYPE_I32: 
-				switch(other.get_type()) {
-				case VAR_TYPE_STRING: 
+			case VAR_TYPE_I32:
+				switch (other.get_type()) {
+				case VAR_TYPE_STRING:
 					wchar_t *end;
 					long val;
-					if((val = wcstol(other.mStrVal.c_str(), &end, 10))) {
+					if ((val = wcstol(other.mStrVal.c_str(), &end, 10))) {
 						//TODO: check
 						mI32Val += val;
-					} else {
+					}
+					else {
 						mType = VAR_TYPE_STRING;
 						reset_var();
 						//TODO: check this out
@@ -173,10 +173,11 @@ namespace enkel {
 					i64tmp = static_cast<int64_t>(mI32Val) + static_cast<int64_t>(other.mI32Val);
 
 					// Check if i32 overflow
-					if(static_cast<int64_t>(i32tmp) != i64tmp) {
+					if (static_cast<int64_t>(i32tmp) != i64tmp) {
 						reset_var(VAR_TYPE_I64);
 						mI64Val = i64tmp;
-					} else {
+					}
+					else {
 						mI32Val = i32tmp;
 					}
 					break;
@@ -188,7 +189,7 @@ namespace enkel {
 				default: ;
 				}
 				break;
-			case VAR_TYPE_I64: 
+			case VAR_TYPE_I64:
 				switch (other.get_type()) {
 				case VAR_TYPE_STRING:
 					wchar_t *end;
@@ -208,7 +209,7 @@ namespace enkel {
 					mI32Val += other.val_as_double();
 					break;
 				case VAR_TYPE_PTR: break;
-				default:;
+				default: ;
 				}
 				break;
 			case VAR_TYPE_FLOAT: break;
@@ -224,13 +225,13 @@ namespace enkel {
 		}
 
 		double variant_datatype::val_as_double() const {
-			switch(mType) {
-			case VAR_TYPE_STRING: 
+			switch (mType) {
+			case VAR_TYPE_STRING:
 				wchar_t *end;
 				return wcstod(mStrVal.c_str(), &end);
-			case VAR_TYPE_I32: 
+			case VAR_TYPE_I32:
 				return static_cast<double>(mI32Val);
-			case VAR_TYPE_I64: 
+			case VAR_TYPE_I64:
 				return static_cast<double>(mI64Val);
 			case VAR_TYPE_FLOAT:
 				return mFVal;
@@ -251,18 +252,18 @@ namespace enkel {
 		}
 
 		bool variant_datatype::ensure_addition_possible(var_type lType, var_type rType) {
-			switch(lType) {
-			case VAR_TYPE_STRING: 
+			switch (lType) {
+			case VAR_TYPE_STRING:
 				return rType == VAR_TYPE_STRING
 					|| rType == VAR_TYPE_I32
 					|| rType == VAR_TYPE_I64
 					|| rType == VAR_TYPE_FLOAT;
-			case VAR_TYPE_I32: 
+			case VAR_TYPE_I32:
 				return rType == VAR_TYPE_STRING
 					|| rType == VAR_TYPE_I32
 					|| rType == VAR_TYPE_I64
 					|| rType == VAR_TYPE_FLOAT;
-			case VAR_TYPE_I64: 
+			case VAR_TYPE_I64:
 				return rType == VAR_TYPE_STRING
 					|| rType == VAR_TYPE_I32
 					|| rType == VAR_TYPE_I64
@@ -271,7 +272,7 @@ namespace enkel {
 				return rType == VAR_TYPE_STRING
 					|| rType == VAR_TYPE_I32
 					|| rType == VAR_TYPE_I64
-					|| rType == VAR_TYPE_FLOAT; 
+					|| rType == VAR_TYPE_FLOAT;
 			case VAR_TYPE_PTR: break;
 			}
 
@@ -283,28 +284,29 @@ namespace enkel {
 		}
 
 		wstring variant_datatype::to_string() const {
-			switch(mType) {
+			switch (mType) {
 
-			case VAR_TYPE_STRING: 
+			case VAR_TYPE_STRING:
 				return mStrVal;
 			case VAR_TYPE_I32:
 				return to_wstring(mI32Val);
 			case VAR_TYPE_I64:
 				return to_wstring(mI64Val);
-			case VAR_TYPE_FLOAT: 
+			case VAR_TYPE_FLOAT:
 				return to_wstring(mFVal);
-			case VAR_TYPE_PTR: 
+			case VAR_TYPE_PTR:
 				return L"";
-			default: 
+			default:
 				return L"";
 			}
 		}
 
-		wostream & operator<<(wostream &os, const variant_datatype &var) {
+		wostream& operator<<(wostream &os, const variant_datatype &var) {
 			wstring strData;
-			if(!var.ensure_type(variant_datatype::VAR_TYPE_STRING)) {
+			if (!var.ensure_type(variant_datatype::VAR_TYPE_STRING)) {
 				strData = var.to_string();
-			} else {
+			}
+			else {
 				strData = L"\"" + var.mStrVal + L"\"";
 			}
 			os << strData;

@@ -1,11 +1,7 @@
 #pragma once
 #include "lexer.h"
-#include "func_node.h"
 #include "compiler_logger.h"
-
-#include "var_decl_expr_node.h"
-#include "block_node.h"
-#include "module_elem_node.h"
+#include "nodes.h"
 #include <map>
 
 namespace enkel {

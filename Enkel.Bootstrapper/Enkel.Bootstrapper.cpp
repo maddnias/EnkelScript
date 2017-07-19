@@ -3,11 +3,10 @@
 
 #include "stdafx.h"
 #include <istream>
-#include <fstream>
 #include <sstream>
 
-#include <iostream>
-#include "../Enkel.Compiler/enkel_runtime.h"
+#include "enkel_runtime.h"
+#include <memory>
 
 
 std::wstring test =

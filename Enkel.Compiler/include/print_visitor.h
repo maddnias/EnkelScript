@@ -1,10 +1,9 @@
 #pragma once
-#include "base_ast_visitor.h"
 #include <ostream>
 #include <string>
+#include "nodes.h"
 
-#define NL "\n"
-
+#define NL L"\n"
 
 namespace enkel {
 	namespace compiler {

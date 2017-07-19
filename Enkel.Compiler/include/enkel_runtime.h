@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include <string>
 #include "parser.h"
 #include "enkel_module.h"
 #include "scope_context.h"

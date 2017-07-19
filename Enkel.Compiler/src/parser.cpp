@@ -1,14 +1,7 @@
 #include "stdafx.h"
 #include "parser.h"
 #include "lexer.h"
-#include "bin_expr_node.h"
-#include "module_node.h"
-#include "var_expr_node.h"
-#include "const_expr_node.h"
-#include "return_expr_node.h"
-#include "param_list_node.h"
-#include "param_node.h"
-#include "call_expr_node.h"
+#include "nodes.h"
 
 using namespace std;
 

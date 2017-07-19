@@ -1,0 +1,17 @@
+#pragma once
+#include "ast/module_node.h"
+#include "ast/module_elem_node.h"
+#include "ast/var_decl_expr_node.h";
+#include "ast/var_expr_node.h"
+#include "ast/bin_expr_node.h"
+#include "ast/return_expr_node.h"
+#include "ast/const_expr_node.h"
+#include "ast/assignment_stmt_node.h"
+#include "ast/param_list_node.h"
+#include "ast/func_decl_node.h"
+#include "ast/block_node.h"
+#include "ast/func_node.h"
+#include "ast/var_expr_node.h"
+#include "ast/assign_expr_node.h"
+#include "ast/param_node.h"
+#include "ast/call_expr_node.h"

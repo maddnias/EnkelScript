@@ -139,9 +139,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="assignment_stmt_node.h" />
     <ClInclude Include="assign_expr_node.h" />
     <ClInclude Include="base_ast_visitor.h" />

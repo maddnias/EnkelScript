@@ -64,7 +64,7 @@ namespace enkel {
 
 		wstring lexer::parse_alpha() {
 			wstring parsedDat;
-			int lastChar = peek_next_char();
+			wchar_t lastChar = peek_next_char();
 
 			while (iswalnum(lastChar)) {
 				parsedDat += get_next_char();
@@ -179,7 +179,8 @@ namespace enkel {
 
 			if (iswalpha(nextChar)) {
 				wstring dat = parse_alpha();
-				mData->seekg(-1, ios::cur);
+				//TODO: fix
+				//mData->seekg(-sizeof(wchar_t), ios::cur);
 				// Check if it is a keyword first
 				if(find(mKeywords.begin(), mKeywords.end(), dat) != mKeywords.end()) {
 					return MAKE_TOK(TOK_KEYWORD, dat);

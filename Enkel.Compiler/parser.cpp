@@ -97,7 +97,7 @@ namespace enkel {
 		}
 
 		unique_ptr<base_node> parser::parse_number() {
-			auto numExpr = make_unique<const_expr_node>(runtime::variant_datatype(mCurTok->get_lexeme_i32()));
+			auto numExpr = make_unique<const_expr_node>(mCurTok->get_lexeme_num());
 			// Eat number
 			next_token();
 			return move(numExpr);

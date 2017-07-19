@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base_ast_visitor.h"
-#include <memory>
 
 namespace enkel {
 	namespace compiler {
@@ -11,7 +10,6 @@ namespace enkel {
 		class base_node {
 		public:
 			virtual ~base_node() {
-				
 			}
 			virtual void accept(base_ast_visitor &visitor) = 0;
 		};

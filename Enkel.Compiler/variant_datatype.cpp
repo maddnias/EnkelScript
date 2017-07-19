@@ -4,9 +4,17 @@
 
 using namespace std;
 
+//TODO: finish all operations
 namespace enkel {
 	namespace runtime {
-		variant_datatype::variant_datatype() {
+		variant_datatype::variant_datatype()
+			: mType(VAR_TYPE_STRING),
+			mStrVal(),
+			mI32Val(0),
+			mI64Val(0),
+			mUI64Val(0),
+			mFVal(0),
+			mPtrVal(nullptr) {
 		}
 
 		variant_datatype::variant_datatype(wstring val)
@@ -14,6 +22,7 @@ namespace enkel {
 			mStrVal(val),
 			mI32Val(0),
 			mI64Val(0),
+			mUI64Val(0),
 			mFVal(0),
 			mPtrVal(nullptr) {
 		}
@@ -23,7 +32,38 @@ namespace enkel {
 			mStrVal(),
 			mI32Val(val),
 			mI64Val(0),
+			mUI64Val(0),
 			mFVal(0),
+			mPtrVal(nullptr) {
+		}
+
+		variant_datatype::variant_datatype(int64_t val)
+			: mType(VAR_TYPE_I64),
+			mStrVal(),
+			mI32Val(0),
+			mI64Val(val),
+			mUI64Val(0),
+			mFVal(0),
+			mPtrVal(nullptr) {
+		}
+
+		variant_datatype::variant_datatype(uint64_t val)
+			: mType(VAR_TYPE_UI64),
+			mStrVal(),
+			mI32Val(0),
+			mI64Val(0),
+			mUI64Val(val),
+			mFVal(0),
+			mPtrVal(nullptr) {
+		}
+
+		variant_datatype::variant_datatype(double val)
+			: mType(VAR_TYPE_FLOAT),
+			mStrVal(),
+			mI32Val(0),
+			mI64Val(0),
+			mUI64Val(0),
+			mFVal(val),
 			mPtrVal(nullptr) {
 		}
 
@@ -96,6 +136,8 @@ namespace enkel {
 				//TODO: err
 			}
 
+			int64_t i64tmp;
+			int i32tmp;
 			switch(mType) {
 			case VAR_TYPE_STRING: 
 				switch(other.get_type()) {
@@ -122,13 +164,25 @@ namespace enkel {
 					} else {
 						mType = VAR_TYPE_STRING;
 						reset_var();
+						//TODO: check this out
 						mStrVal = to_wstring(mI32Val) + other.mStrVal;
 					}
 					break;
 				case VAR_TYPE_I32:
+					i32tmp = mI32Val + other.mI32Val;
+					i64tmp = static_cast<int64_t>(mI32Val) + static_cast<int64_t>(other.mI32Val);
+
+					// Check if i32 overflow
+					if(static_cast<int64_t>(i32tmp) != i64tmp) {
+						reset_var(VAR_TYPE_I64);
+						mI64Val = i64tmp;
+					} else {
+						mI32Val = i32tmp;
+					}
+					break;
 				case VAR_TYPE_I64:
-				case VAR_TYPE_FLOAT: 
-					mI32Val += other.val_as_double();
+					reset_var(VAR_TYPE_I64);
+					mI64Val = static_cast<int64_t>(mI32Val) + other.mI64Val;
 					break;
 				case VAR_TYPE_PTR: break;
 				default: ;
@@ -144,8 +198,7 @@ namespace enkel {
 						mI32Val += val;
 					}
 					else {
-						mType = VAR_TYPE_STRING;
-						reset_var();
+						reset_var(VAR_TYPE_STRING);
 						mStrVal = to_wstring(mI32Val) + other.mStrVal;
 					}
 					break;
@@ -187,10 +240,12 @@ namespace enkel {
 			return 0.0f;
 		}
 
-		void variant_datatype::reset_var() {
+		void variant_datatype::reset_var(var_type type) {
+			mType = type;
 			mStrVal = L"";
 			mI32Val = 0;
 			mI64Val = 0;
+			mUI64Val = 0;
 			mFVal = 0.0f;
 			//TODO: ptr
 		}

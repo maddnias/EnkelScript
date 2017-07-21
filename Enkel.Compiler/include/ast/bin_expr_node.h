@@ -9,7 +9,9 @@ namespace enkel {
 		class bin_expr_node : public expr_node {
 		public:
 			enum bin_op {
-				BIN_OP_PLUS
+				BIN_OP_PLUS,
+				BIN_OP_EQUAL,
+				BIN_OP_MUL
 			};
 
 			bin_expr_node(bin_op op, std::unique_ptr<base_node> lhs,

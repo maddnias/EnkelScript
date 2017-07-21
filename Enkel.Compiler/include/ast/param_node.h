@@ -3,7 +3,7 @@
 
 namespace enkel {
 	namespace compiler {
-		class param_node : public base_node {
+		class param_node : public expr_node {
 
 		public:
 			param_node(const std::wstring &ident)

@@ -23,7 +23,7 @@ namespace enkel {
 			variant_datatype& get_var(std::wstring ident);
 			void set_var(std::wstring ident, variant_datatype &data);
 			std::wostream &get_ostream() const;
-			std::unique_ptr<compiler::func_decl_node>& resolve_func(std::wstring &name);
+			std::shared_ptr<compiler::func_decl_node>& resolve_func(std::wstring &name);
 
 		private:
 			std::vector<std::shared_ptr<enkel_module>> mLoadedModules;

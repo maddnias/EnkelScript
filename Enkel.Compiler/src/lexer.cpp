@@ -55,8 +55,8 @@ namespace enkel {
 
 		wchar_t lexer::peek(int count) const {
 			streampos curLoc = mData->tellg();
-			mData->seekg(curLoc + static_cast<streampos>(count));
-			int peekedChar = peek_next_char();
+			mData->seekg(static_cast<streampos>(count), ios::cur);
+			wchar_t peekedChar = peek_next_char();
 			mData->seekg(curLoc);
 
 			return peekedChar;
@@ -89,9 +89,9 @@ namespace enkel {
 
 		wstring lexer::parse_number() {
 			wstring numberData;
-			int nextChar = peek_next_char();
+			wchar_t nextChar = peek_next_char();
 
-			while (isdigit(nextChar)) {
+			while (iswdigit(nextChar)) {
 				numberData += get_next_char();
 				nextChar = peek_next_char();
 			}
@@ -174,13 +174,12 @@ namespace enkel {
 
 		//TODO: make all tolower before parsing? eg LOCAL GLOBAL
 		shared_ptr<lexer_token> lexer::next_token() {
-			int nextChar = eat_ws();
+			wchar_t nextChar = eat_ws();
 			int fixedCol = mCol;
 
 			if (iswalpha(nextChar)) {
 				wstring dat = parse_alpha();
-				//TODO: fix
-				//mData->seekg(-sizeof(wchar_t), ios::cur);
+
 				// Check if it is a keyword first
 				if(find(mKeywords.begin(), mKeywords.end(), dat) != mKeywords.end()) {
 					return MAKE_TOK(TOK_KEYWORD, dat);
@@ -225,13 +224,22 @@ namespace enkel {
 			}
 
 			if(nextChar == ':') {
+				if(peek(1) == '=') {
+					eat(2);
+					return MAKE_TOK(TOK_ASSIGN, L":=");
+				}
 				eat();
-				return MAKE_TOK(TOK_TYPE_DECL, L":");
+				return MAKE_TOK(TOK_UNK, L":");
 			}
 
 			if(nextChar == ',') {
 				eat();
 				return MAKE_TOK(TOK_COMMA, L",");
+			}
+
+			if(nextChar == '@') {
+				eat();
+				return MAKE_TOK(TOK_STL_CONST, L"@");
 			}
 
 			if (nextChar == '-' && peek(1) == '>') {
@@ -242,22 +250,22 @@ namespace enkel {
 			switch(nextChar) {
 			case '=':
 				eat();
-				if (peek(1) == '=') {
-					eat();
-					return MAKE_TOK(TOK_OP_BIN, L"==");
-				}
-				return MAKE_TOK(TOK_ASSIGN, L"=");
+				return MAKE_TOK(TOK_OP_BIN, L"=");
 			case '!':
 				eat();
 				if(peek(1) == '=') {
 					eat();
 					return MAKE_TOK(TOK_OP_BIN, L"!=");
 				}
+				//TODO: unary
 				return MAKE_TOK(TOK_OP_BIN, L"!");
 			case '+':
 				eat();
 				//TODO: unary
 				return MAKE_TOK(TOK_OP_BIN, L"+");
+			case '*':
+				eat();
+				return MAKE_TOK(TOK_OP_BIN, L"*");
 			}
 
 			if(nextChar == '=') {

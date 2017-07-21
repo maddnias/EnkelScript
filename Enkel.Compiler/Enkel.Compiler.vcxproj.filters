@@ -167,5 +167,8 @@
     <ClInclude Include="include\ast\base_node.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
+    <ClInclude Include="include\ast\if_stmt_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

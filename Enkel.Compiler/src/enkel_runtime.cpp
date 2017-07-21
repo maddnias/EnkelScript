@@ -72,21 +72,33 @@ namespace enkel {
 			if (mGlobalScope.var_exists(ident)) {
 				return mGlobalScope.get_var(ident);
 			}
-			return get_current_scope().get_var(ident);
+			for (auto &scope : mScopes) {
+				if (scope.var_exists(ident)) {
+					return scope.get_var(ident);
+				}
+			}
+			//TODO: real error
+			throw runtime_error("not found");
 		}
 
 		void enkel_runtime::set_var(wstring ident, variant_datatype &data) {
 			if (mGlobalScope.var_exists(ident)) {
 				return mGlobalScope.set_var(ident, data);
 			}
-			return get_current_scope().set_var(ident, data);
+			for(auto &scope : mScopes) {
+				if(scope.var_exists(ident)) {
+					scope.set_var(ident, data);
+					return;
+				}
+			}
+			get_current_scope().set_var(ident, data);
 		}
 
 		wostream& enkel_runtime::get_ostream() const {
 			return mOutStream;
 		}
 
-		unique_ptr<compiler::func_decl_node>& enkel_runtime::resolve_func(wstring &name) {
+		shared_ptr<compiler::func_decl_node>& enkel_runtime::resolve_func(wstring &name) {
 			for(auto &mod : mLoadedModules) {
 				if(mod->func_exists(name)) {
 					return mod->resolve_func(name);

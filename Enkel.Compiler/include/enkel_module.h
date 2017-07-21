@@ -8,7 +8,7 @@ namespace enkel {
 		class enkel_module
 		{
 		public:
-			typedef std::unordered_map<std::wstring, std::unique_ptr<compiler::func_decl_node>> FuncTable;
+			typedef std::unordered_map<std::wstring, std::shared_ptr<compiler::func_decl_node>> FuncTable;
 
 			enkel_module();
 			~enkel_module();
@@ -21,7 +21,7 @@ namespace enkel {
 			 * \param name The name of the function to resolve
 			 * \return A shared pointer to the resolved func_node
 			 */
-			std::unique_ptr<compiler::func_decl_node>& resolve_func(std::wstring &name);
+			std::shared_ptr<compiler::func_decl_node>& resolve_func(std::wstring &name);
 
 		private:
 			FuncTable mFuncTbl;

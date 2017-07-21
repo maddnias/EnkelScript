@@ -3,6 +3,7 @@
 #include "lexer.h"
 #include <map>
 #include "nodes.h"
+#include <type_traits>
 
 namespace enkel {
 	namespace compiler {
@@ -31,6 +32,8 @@ namespace enkel {
 			std::unique_ptr<base_node> parse_unary();
 			std::unique_ptr<base_node> parse_identifer();
 			std::unique_ptr<base_node> parse_func_decl();
+			void parse_else_chain(std::unique_ptr<if_stmt_node> &node);
+			__declspec(noinline) std::unique_ptr<base_node> parse_if_stmt();
 			std::unique_ptr<base_node> parse_keyword();
 			std::unique_ptr<module_elem_node> parse_mod_elem();
 			std::unique_ptr<base_node> parse_stmt();
@@ -39,12 +42,13 @@ namespace enkel {
 			std::unique_ptr<base_node> parse_var_decl();
 			std::unique_ptr<base_node> parse_number();
 			std::unique_ptr<base_node> parse_literal();
+			std::unique_ptr<base_node> parse_stl_const();
 			std::unique_ptr<base_node> parse_primary();
 			std::unique_ptr<base_node> parse_call_expr();
 			std::vector<std::unique_ptr<base_node>> parse_arg_list();
 
 			int get_tok_prec();
-			void expect(const std::wstring &expected, std::wstring &actual, error_level level) const;
+			void expect(const std::wstring &expected, const std::wstring &actual, error_level level) const;
 			void expect(lexer_tok_type expected, lexer_tok_type actual, error_level level) const;
 
 			std::unique_ptr<lexer> mLexer;

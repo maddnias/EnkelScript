@@ -17,6 +17,7 @@ namespace enkel {
 		class assign_expr_node;
 		class block_node;
 		class call_expr_node;
+		class if_stmt_node;
 
 		class base_ast_visitor
 		{
@@ -39,6 +40,7 @@ namespace enkel {
 			virtual void visit(var_decl_expr_node &node) {}
 			virtual void visit(var_expr_node &node) {}
 			virtual void visit(param_list_node &node) {}
+			virtual void visit(if_stmt_node &node) {}
 		};
 	}
 }

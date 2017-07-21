@@ -22,7 +22,7 @@ namespace enkel {
 			mFuncTbl[pFunc->get_name()] = move(pFunc);
 		}
 
-		unique_ptr<compiler::func_decl_node>& enkel_module::resolve_func(wstring &name) {
+		shared_ptr<compiler::func_decl_node>& enkel_module::resolve_func(wstring &name) {
 			FuncTable::iterator foundFunc;
 			if ((foundFunc = mFuncTbl.find(name)) != mFuncTbl.end()) {
 				return foundFunc->second;

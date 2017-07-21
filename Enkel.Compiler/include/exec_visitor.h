@@ -18,6 +18,10 @@ namespace enkel {
 			void visit(compiler::var_decl_expr_node &node) override;
 			void visit(compiler::var_expr_node &node) override;
 			void visit(compiler::call_expr_node &node) override;
+			void visit(compiler::if_stmt_node &node) override;
+			void visit(compiler::block_node &node) override;
+			void visit(compiler::func_decl_node &node) override;
+
 		private:
 			static bool ensure_arg_count(std::vector<std::unique_ptr<compiler::base_node>> &args, int expectedCount);
 			enkel_runtime& mRuntime;

@@ -45,6 +45,12 @@ namespace enkel {
 			case bin_expr_node::BIN_OP_PLUS:
 				node.set_val(val1 + val2);
 				break;
+			case bin_expr_node::BIN_OP_EQUAL:
+				node.set_val(val1 == val2 ? 1 : 0);
+				break;
+			case bin_expr_node::BIN_OP_MUL:
+				node.set_val(val1 * val2);
+				break;
 			default: ;
 			}
 		}
@@ -69,8 +75,8 @@ namespace enkel {
 		}
 
 		void exec_visitor::visit(call_expr_node &node) {
-			if(node.get_isstl()) {
-				if(node.get_target_name() == L"print") {
+			if (node.get_isstl()) {
+				if (node.get_target_name() == L"print") {
 					ensure_arg_count(node.get_args(), 1);
 					auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
 					argExpr->accept(*this);
@@ -78,11 +84,50 @@ namespace enkel {
 					enkel_stl::print(mRuntime.get_ostream(), argExpr->get_val());
 				}
 			}
+			else {
+				auto targetFunc = mRuntime.resolve_func(node.get_target_name());
+			}
+		}
+
+		void exec_visitor::visit(if_stmt_node &node) {
+			if (node.get_cond()) {
+				auto condExpr = dynamic_cast<expr_node*>(node.get_cond().get());
+				condExpr->accept(*this);
+				if (condExpr->get_val()) {
+					mRuntime.scope_increase();
+					node.get_true_block()->accept(*this);
+					mRuntime.scope_decrease();
+				}
+				else {
+					// There might not be an else block
+					if (node.get_false_block()) {
+						node.get_false_block()->accept(*this);
+					}
+				}
+			}
+			else {
+				mRuntime.scope_increase();
+				node.get_true_block()->accept(*this);
+				mRuntime.scope_decrease();
+			}
+		}
+
+		void exec_visitor::visit(block_node &node) {
+			for (auto &elem : node.get_statements()) {
+				elem->accept(*this);
+			}
+		}
+
+		void exec_visitor::visit(func_decl_node &node) {
+			node.get_body()->accept(*this);
+			if(mRuntime.get_current_scope().var_exists(L"0_ret")) {
+				node.set_val(mRuntime.get_current_scope().get_var(L"0_ret"));
+			}
 		}
 
 		bool exec_visitor::ensure_arg_count(vector<unique_ptr<base_node>> &args, int expectedCount) {
 			bool isCorrect = args.size() == expectedCount;
-			if(!isCorrect) {
+			if (!isCorrect) {
 				//TODO: runtime error
 			}
 			return isCorrect;

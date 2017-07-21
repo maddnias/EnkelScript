@@ -8,27 +8,29 @@
 namespace enkel {
 	namespace compiler {
 		static std::unordered_map<int, std::wstring> mTokMappings = {
-			{ 0, _T("TOK_EOF") },
-			{ 1, _T("TOK_FUNC_DEF") },
-			{ 2, _T("TOK_END") },
-			{ 3, _T("TOK_IDENTIFIER") },
-			{ 4, _T("TOK_NUMBER") },
-			{ 5, _T("TOK_UNK") },
-			{ 6, _T("TOK_OPEN_PARENTH") },
-			{ 7, _T("TOK_CLOSE_PARENTH") },
-			{ 8, _T("TOK_COMMENT") },
-			{ 9, _T("TOK_TYPE_DECL") },
-			{ 10, _T("TOK_VAR_DECL") },
-			{ 11, _T("TOK_FUNC_TYPE_DECL") },
-			{ 12, _T("TOK_KEYWORD") },
-			{ 13, _T("TOK_COMMA") },
-			{ 14, _T("TOK_ASSIGN") },
-			{ 15, _T("TOK_EQU") },
-			{ 16, _T("TOK_OP_UNARY") },
-			{ 17, _T("TOK_OP_BIN") },
-			{ 18, _T("TOK_VAR_DECL_SCOPE") },
-			{ 19, _T("TOK_LITERAL") },
-			{ 20, _T("TOK_DQUOTE") }
+			{ 0, L"TOK_EOF" },
+			{ 1, L"TOK_FUNC_DEF" },
+			{ 2, L"TOK_END" },
+			{ 3, L"TOK_IDENTIFIER" },
+			{ 4, L"TOK_NUMBER" },
+			{ 5, L"TOK_UNK" },
+			{ 6, L"TOK_OPEN_PARENTH" },
+			{ 7, L"TOK_CLOSE_PARENTH" },
+			{ 8, L"TOK_COMMENT" },
+			{ 9, L"TOK_TYPE_DECL" },
+			{ 10, L"TOK_VAR_DECL" },
+			{ 11, L"TOK_FUNC_TYPE_DECL" },
+			{ 12, L"TOK_KEYWORD" },
+			{ 13, L"TOK_COMMA" },
+			{ 14, L"TOK_ASSIGN" },
+			{ 15, L"TOK_EQU" },
+			{ 16, L"TOK_OP_UNARY" },
+			{ 17, L"TOK_OP_BIN" },
+			{ 18, L"TOK_VAR_DECL_SCOPE" },
+			{ 19, L"TOK_LITERAL" },
+			{ 20, L"TOK_DQUOTE" },
+			{ 21, L"TOK_SQUOTE" },
+			{ 22, L"TOK_STL_CONST"}
 		};
 
 		enum lexer_tok_type : int {
@@ -52,7 +54,9 @@ namespace enkel {
 			TOK_OP_BIN,
 			TOK_VAR_DECL_SCOPE,
 			TOK_LITERAL,
-			TOK_DQUOTE
+			TOK_DQUOTE,
+			TOK_SQUOTE,
+			TOK_STL_CONST
 		};
 
 		class lexer_token {

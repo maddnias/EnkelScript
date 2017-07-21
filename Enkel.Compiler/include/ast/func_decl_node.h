@@ -5,7 +5,7 @@
 
 namespace enkel {
 	namespace compiler {
-		class func_decl_node : public base_node {
+		class func_decl_node : public expr_node {
 		public:
 
 			func_decl_node(const std::wstring &name, std::unique_ptr<param_list_node> params,

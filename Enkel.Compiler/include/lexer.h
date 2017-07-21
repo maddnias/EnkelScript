@@ -46,7 +46,9 @@ namespace enkel {
 			std::vector<std::wstring> mKeywords = {
 				L"return",
 				L"int",
-				L"string"
+				L"string",
+				L"if",
+				L"else"
 			};
 		};
 	}

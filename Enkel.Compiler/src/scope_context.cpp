@@ -14,7 +14,7 @@ namespace enkel {
 		}
 
 		variant_datatype& scope_context::get_var(wstring ident) {
-			assert(find_var(ident));
+			//assert(find_var(ident));
 			return find_var(ident)->get_data();
 		}
 

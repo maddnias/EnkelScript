@@ -42,7 +42,7 @@ namespace enkel {
 		}
 
 		void print_visitor::visit(assignment_stmt_node &node) {
-			print(L" = ");
+			print(L" := ");
 		}
 
 		void print_visitor::visit(assign_expr_node &node) {
@@ -54,13 +54,30 @@ namespace enkel {
 			case bin_expr_node::BIN_OP_PLUS:
 				print(L" + ");
 				break;
+			case bin_expr_node::BIN_OP_EQUAL:
+				print(L" = ");
+				break;
+			case bin_expr_node::BIN_OP_MUL:
+				print(L" * ");
+				break;
 			}
 			node.get_rhs()->accept(*this);
 		}
 
 		void print_visitor::visit(call_expr_node &node) {
+			print(node.get_target_name(), L"(");
+			int curIndent = reset_indent();
+			int argCount = node.get_args().size();
+			int counter = 0;
+			for (auto &arg : node.get_args()) {
+				arg->accept(*this);
+				if (++counter < argCount) {
+					print(", ");
+				}
+			}
+			print(")");
+			mIndent = curIndent;
 		}
-
 
 		void print_visitor::visit(func_decl_node &node) {
 			print(L"func ", node.get_name());
@@ -77,7 +94,15 @@ namespace enkel {
 		}
 
 		void print_visitor::visit(const_expr_node &node) {
-			print(node.get_val());
+			// TODO: ugly
+			// This is done to prevent consts like @NewLine to mess up the print
+			wstring constName = enkel_stl::is_stl_const_val(node.get_val());
+			if(!constName.empty()) {
+				print("@", constName);
+			}
+			else {
+				print(node.get_val());
+			}
 		}
 
 		void print_visitor::visit(return_expr_node &node) {
@@ -92,7 +117,7 @@ namespace enkel {
 			print(node.get_scope_decl(), node.get_name());
 			if (node.get_init_expr()) {
 				int curIndent = reset_indent();
-				print(L" = ");
+				print(L" := ");
 				node.get_init_expr()->accept(*this);
 				mIndent = curIndent;
 			}
@@ -116,6 +141,32 @@ namespace enkel {
 			}
 			mIndent = curIndent;
 			print(L")", NL);
+		}
+
+		void print_visitor::visit(if_stmt_node &node) {
+			if (node.get_cond()) {
+				print(L"if ");
+				int curIndent = reset_indent();
+				node.get_cond()->accept(*this);
+				print(NL);
+				mIndent = curIndent;
+			} else {
+				print(L"else ", NL);
+			}
+
+			indent();
+			node.get_true_block()->accept(*this);
+			de_indent();
+
+			if(node.get_false_block()) {
+				if (dynamic_cast<if_stmt_node*>(node.get_false_block().get())->get_cond()) {
+					print("else ");
+				}
+				node.get_false_block()->accept(*this);
+			}
+			else {
+				print("end", NL);
+			}
 		}
 
 

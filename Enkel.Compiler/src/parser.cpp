@@ -9,12 +9,11 @@ namespace enkel {
 	namespace compiler {
 		parser::parser(unique_ptr<lexer> lexer, unique_ptr<compiler_logger> compileLogger)
 			: mLexer(move(lexer)),
-			mCompileLogger(move(compileLogger)) {
+			  mCompileLogger(move(compileLogger)) {
 			next_token();
 		}
 
-		parser::~parser()
-		{
+		parser::~parser() {
 		}
 
 		shared_ptr<lexer_token> parser::next_token(int count) {
@@ -33,10 +32,10 @@ namespace enkel {
 		unique_ptr<module_node> parser::parse_module() {
 			auto mod = make_unique<module_node>(L"__enkel_mod_0");
 
-			while(mCurTok->get_type() != TOK_EOF) {
+			while (mCurTok->get_type() != TOK_EOF) {
 				mod->add_elem(parse_mod_elem());
 			}
-		
+
 			return move(mod);
 		}
 
@@ -51,13 +50,13 @@ namespace enkel {
 
 		unique_ptr<base_node> parser::parse_expr() {
 			auto lhs = parse_unary();
-			if(!lhs) {
+			if (!lhs) {
 				// Prevent infinite loop
 				next_token();
 				return nullptr;
 			}
 
-			if(dynamic_cast<return_expr_node*>(lhs.get())) {
+			if (dynamic_cast<return_expr_node*>(lhs.get())) {
 				return move(lhs);
 			}
 
@@ -77,6 +76,11 @@ namespace enkel {
 					block->add_stmt(parse_identifer());
 					break;
 				case TOK_KEYWORD:
+					// If we're parsing an if-statement block we need to end on 'else'
+					if (mCurTok->get_lexeme_str() == L"else") {
+						blockEnd = true;
+						break;
+					}
 					block->add_stmt(parse_keyword());
 					break;
 
@@ -103,6 +107,23 @@ namespace enkel {
 			return move(literal);
 		}
 
+		unique_ptr<base_node> parser::parse_stl_const() {
+			expect(TOK_STL_CONST, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
+			// Eat '@'
+			next_token();
+			expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
+
+			if(!enkel_stl::is_stl_const(mCurTok->get_lexeme_str())) {
+				// TODO: compiler error
+				throw runtime_error("const");
+			}
+
+			auto constExpr = make_unique<const_expr_node>(enkel_stl::get_const(mCurTok->get_lexeme_str()));
+			// Eat ident
+			next_token();
+			return move(constExpr);
+		}
+
 		unique_ptr<base_node> parser::parse_primary() {
 			switch (mCurTok->get_type()) {
 			case TOK_IDENTIFIER:
@@ -115,6 +136,8 @@ namespace enkel {
 				return parse_literal();
 			case TOK_KEYWORD:
 				return parse_keyword();
+			case TOK_STL_CONST:
+				return parse_stl_const();
 			}
 			return nullptr;
 		}
@@ -140,9 +163,14 @@ namespace enkel {
 			next_token();
 
 			vector<unique_ptr<base_node>> args;
-			while(mCurTok->get_type() != TOK_CLOSE_PARENTH) {
-				if(mCurTok->get_type() == TOK_EOF) {
+			while (mCurTok->get_type() != TOK_CLOSE_PARENTH) {
+				if (mCurTok->get_type() == TOK_EOF) {
 					//TODO: something seriously wrong
+				}
+				if(mCurTok->get_type() == TOK_COMMA) {
+					// Eat ','
+					next_token();
+					continue;
 				}
 				args.push_back(parse_expr());
 			}
@@ -160,7 +188,7 @@ namespace enkel {
 		unique_ptr<base_node> parser::parse_var_decl() {
 			//TODO: expect scope decl
 			wstring scopeDecl;
-			if(mCurTok->get_type() == TOK_VAR_DECL_SCOPE) {
+			if (mCurTok->get_type() == TOK_VAR_DECL_SCOPE) {
 				scopeDecl = mCurTok->get_lexeme_str();
 				// Eat scope decl
 				next_token();
@@ -186,15 +214,15 @@ namespace enkel {
 			// Eat '('
 			next_token();
 			auto params = make_unique<param_list_node>();
-			if(mCurTok->get_type() == TOK_CLOSE_PARENTH) {
+			if (mCurTok->get_type() == TOK_CLOSE_PARENTH) {
 				// No params
 				return move(params);
 			}
 			expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
 
-			while(mCurTok->get_type() == TOK_IDENTIFIER
+			while (mCurTok->get_type() == TOK_IDENTIFIER
 				|| mCurTok->get_type() == TOK_COMMA) {
-				if(mCurTok->get_type() == TOK_IDENTIFIER) {
+				if (mCurTok->get_type() == TOK_IDENTIFIER) {
 					params->add_param(make_unique<param_node>(mCurTok->get_lexeme_str()));
 				}
 				// Eat ident/comma
@@ -209,7 +237,7 @@ namespace enkel {
 		}
 
 		unique_ptr<base_node> parser::parse_unary() {
-			if(mCurTok->get_type() != TOK_OP_UNARY) {
+			if (mCurTok->get_type() != TOK_OP_UNARY) {
 				return parse_primary();
 			}
 
@@ -218,16 +246,23 @@ namespace enkel {
 
 		unique_ptr<base_node> parser::parse_identifer() {
 			wstring identName = mCurTok->get_lexeme_str();
-			
+			auto nextPeeked = peek_next_token();
+
 			// Check if it's a call
-			if(peek_next_token()->get_type() == TOK_OPEN_PARENTH) {
+			if (nextPeeked->get_type() == TOK_OPEN_PARENTH) {
 				return parse_call_expr();
 			}
 
 			// Check if it's a declaration
-			if(peek_next_token()->get_type() == TOK_ASSIGN) {
+			if (nextPeeked->get_type() == TOK_ASSIGN) {
 				return parse_var_decl();
 			}
+
+			//// Check if it's an assignment
+			//if(nextPeeked->get_type() == TOK_OP_BIN
+			//	&& nextPeeked->get_lexeme_str() == L"=") {
+			//	auto test = parse_expr();
+			//}
 
 			// Eat ident
 			next_token();
@@ -250,9 +285,65 @@ namespace enkel {
 			return make_unique<func_decl_node>(funcName, move(params), move(body));
 		}
 
+		void parser::parse_else_chain(unique_ptr<if_stmt_node> &node) {
+			expect(TOK_KEYWORD, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
+			// Eat 'else'
+			next_token();
+			// Check if we have a condition on else block
+			if (mCurTok->get_lexeme_str() == L"if") {
+				// Eat 'if'
+				next_token();
+				auto cond = parse_expr();
+				auto body = parse_block();
+				//	node->add_else_stmt(make_unique<if_stmt_node>(move(cond), move(body)));
+			}
+			else {
+				// Unconditional else block
+				//		node->add_else_stmt(make_unique<if_stmt_node>(nullptr /* cond */, parse_block()));
+			}
+			if (mCurTok->get_lexeme_str() == L"end") {
+				// Eat 'end'
+				next_token();
+			}
+			else {
+				// Call recursively down the chain
+				parse_else_chain(node);
+			}
+		}
+
+		unique_ptr<base_node> parser::parse_if_stmt() {
+			auto curTok = mCurTok;
+			if (mCurTok->get_lexeme_str() == L"if"
+				|| mCurTok->get_lexeme_str() == L"else") {
+				// Eat 'if'
+				next_token();
+			}
+			unique_ptr<base_node> cond;
+			if (curTok->get_lexeme_str() == L"if") {
+				cond = parse_expr();
+			}
+			auto trueBlock = parse_block();
+			unique_ptr<base_node> falseBlock;
+			if (mCurTok->get_lexeme_str() == L"else") {
+				// Eat 'else'
+				next_token();
+				falseBlock = parse_if_stmt();
+			}
+			//expect(L"end", mCurTok->get_lexeme_str(), error_level::ERR_LVL_ERROR);
+
+			return make_unique<if_stmt_node>(move(cond), move(trueBlock), move(falseBlock));
+		}
+
 		unique_ptr<base_node> parser::parse_keyword() {
 			assert(mCurTok->get_type() == TOK_KEYWORD);
-			if(mCurTok->get_lexeme_str() == L"return") {
+			if (mCurTok->get_lexeme_str() == L"if") {
+				auto ifStmt = parse_if_stmt();
+				expect(L"end", mCurTok->get_lexeme_str(), error_level::ERR_LVL_ERROR);
+				// Eat 'end'
+				next_token();
+				return move(ifStmt);
+			}
+			if (mCurTok->get_lexeme_str() == L"return") {
 				// Eat 'return'
 				next_token();
 				return make_unique<return_expr_node>(move(parse_expr()));
@@ -264,9 +355,10 @@ namespace enkel {
 		unique_ptr<module_elem_node> parser::parse_mod_elem() {
 			auto modElem = make_unique<module_elem_node>();
 			while (mCurTok->get_type() != TOK_EOF) {
-				if(mCurTok->get_type() == TOK_FUNC_DECL) {
+				if (mCurTok->get_type() == TOK_FUNC_DECL) {
 					modElem->add_node(parse_func_decl());
-				} else {
+				}
+				else {
 					modElem->add_node(parse_stmt());
 				}
 			}
@@ -275,18 +367,21 @@ namespace enkel {
 		}
 
 		unique_ptr<base_node> parser::parse_stmt() {
-			if(mCurTok->get_type() == TOK_VAR_DECL_SCOPE) {
+			if (mCurTok->get_type() == TOK_VAR_DECL_SCOPE) {
 				return parse_var_decl();
 			}
-			if(mCurTok->get_type() == TOK_IDENTIFIER) {
+			if (mCurTok->get_type() == TOK_IDENTIFIER) {
 				return parse_identifer();
+			}
+			if (mCurTok->get_type() == TOK_KEYWORD) {
+				return parse_keyword();
 			}
 
 			return nullptr;
 		}
 
-		unique_ptr<base_node> parser::parse_bin_op_rhs(int exprPrec, 
-			unique_ptr<base_node> lhs) {
+		unique_ptr<base_node> parser::parse_bin_op_rhs(int exprPrec,
+		                                               unique_ptr<base_node> lhs) {
 			while (true) {
 				int tokPrec = get_tok_prec();
 
@@ -295,9 +390,15 @@ namespace enkel {
 				}
 
 				bin_expr_node::bin_op op;
-				switch(mCurTok->get_lexeme_str()[0]) {
+				switch (mCurTok->get_lexeme_str()[0]) {
 				case '+':
 					op = bin_expr_node::BIN_OP_PLUS;
+					break;
+				case '=':
+					op = bin_expr_node::BIN_OP_EQUAL;
+					break;
+				case '*':
+					op = bin_expr_node::BIN_OP_MUL;
 					break;
 				default:
 					//TODO: add rest
@@ -324,7 +425,7 @@ namespace enkel {
 		}
 
 		int parser::get_tok_prec() {
-			if (!isascii(mCurTok->get_lexeme_str()[0])) {
+			if (!iswascii(mCurTok->get_lexeme_str()[0])) {
 				return -1;
 			}
 
@@ -336,15 +437,15 @@ namespace enkel {
 			return tokPrec;
 		}
 
-		void parser::expect(const wstring &expected, wstring &actual, compiler_logger::error_level level) const {
+		void parser::expect(const wstring &expected, const wstring &actual, compiler_logger::error_level level) const {
 			// For debugging purposes
 			if (level > 0) {
 				assert(expected == actual);
 			}
 
-			switch(level) {
+			switch (level) {
 			case error_level::ERR_LVL_DEBUG:
-				if(mCompileLogger) {
+				if (mCompileLogger) {
 					mCompileLogger->debug(L"Expected: \"" + expected + L"\", got: \"" + actual + L"\"");
 				}
 			case error_level::ERR_LVL_WARN:

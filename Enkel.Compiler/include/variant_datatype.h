@@ -24,6 +24,7 @@ namespace enkel {
 			variant_datatype(double val);
 			~variant_datatype();
 
+			explicit operator bool() const;
 			variant_datatype& operator=(const variant_datatype &variant2);
 			variant_datatype& operator=(int i32dat);
 			variant_datatype& operator=(int64_t i64dat);
@@ -31,10 +32,14 @@ namespace enkel {
 			variant_datatype& operator=(double floatDat);
 			variant_datatype& operator=(std::wstring strDat);
 			variant_datatype& operator+(variant_datatype &other);
+			variant_datatype& operator*(variant_datatype &other);
+			bool operator==(variant_datatype &other) const;
+			bool operator!=(variant_datatype &other) const;
 
 			friend std::wostream& operator<<(std::wostream& os, const variant_datatype &var);
 
 			var_type get_type() const;
+			std::wstring to_string() const;
 
 		private:
 			double val_as_double() const;
@@ -42,7 +47,6 @@ namespace enkel {
 			static bool ensure_addition_possible(var_type lType, var_type rType);
 		
 			bool ensure_type(var_type type) const;
-			std::wstring to_string() const;
 
 			var_type mType;
 			std::wstring mStrVal;

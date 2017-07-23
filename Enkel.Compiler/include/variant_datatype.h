@@ -40,6 +40,7 @@ namespace enkel {
 
 			var_type get_type() const;
 			std::wstring to_string() const;
+			bool empty() const;
 
 		private:
 			double val_as_double() const;
@@ -55,6 +56,7 @@ namespace enkel {
 			uint64_t mUI64Val;
 			double mFVal;
 			void *mPtrVal;
+			bool mEmpty;
 		};
 	}
 }

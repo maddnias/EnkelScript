@@ -7,19 +7,24 @@ namespace enkel {
 
 		public:
 			param_node(const std::wstring &ident)
-				: mIdent(ident) {
-
+				: mByRef(false),
+				mIdent(ident) {
 			}
 
 			void accept(base_ast_visitor &visitor) override {
 				visitor.visit(*this);
 			}
 
-			const std::wstring& get_name() const {
+			std::wstring get_name() const {
 				return mIdent;
 			}
 
+			bool is_byref() const {
+				return mByRef;
+			}
+
 		private:
+			bool mByRef;
 			std::wstring mIdent;
 		};
 	}

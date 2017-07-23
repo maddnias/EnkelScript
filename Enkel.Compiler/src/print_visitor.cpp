@@ -80,9 +80,10 @@ namespace enkel {
 		}
 
 		void print_visitor::visit(func_decl_node &node) {
+			print(NL);
 			print(L"func ", node.get_name());
 			int curIndent = reset_indent();
-			node.get_params()->accept(*this);
+			node.get_paramlist()->accept(*this);
 			mIndent = curIndent;
 			indent();
 			node.get_body()->accept(*this);

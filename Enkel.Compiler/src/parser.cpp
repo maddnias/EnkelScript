@@ -113,7 +113,7 @@ namespace enkel {
 			next_token();
 			expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
 
-			if(!enkel_stl::is_stl_const(mCurTok->get_lexeme_str())) {
+			if(!enkel_stl::is_stl_macro(mCurTok->get_lexeme_str())) {
 				// TODO: compiler error
 				throw runtime_error("const");
 			}

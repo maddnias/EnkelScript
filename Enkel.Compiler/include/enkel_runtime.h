@@ -20,8 +20,10 @@ namespace enkel {
 			void scope_increase();
 			void scope_decrease();
 			scope_context& get_current_scope();
-			variant_datatype& get_var(std::wstring ident);
-			void set_var(std::wstring ident, variant_datatype &data);
+			std::shared_ptr<rt_var> get_var(std::wstring ident);
+			variant_datatype& get_var_data(std::wstring ident);
+			void set_var(rt_var &var);
+			void set_var(std::wstring ident, const variant_datatype &data);
 			std::wostream &get_ostream() const;
 			std::shared_ptr<compiler::func_decl_node>& resolve_func(std::wstring &name);
 

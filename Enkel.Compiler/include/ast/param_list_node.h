@@ -16,7 +16,7 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			std::vector<std::unique_ptr<param_node>>& get_params() {
+			std::vector<std::shared_ptr<param_node>>& get_params() {
 				return mNodes;
 			}
 
@@ -33,7 +33,7 @@ namespace enkel {
 			}
 
 		private:
-			std::vector<std::unique_ptr<param_node>> mNodes;
+			std::vector<std::shared_ptr<param_node>> mNodes;
 		};
 	}
 }

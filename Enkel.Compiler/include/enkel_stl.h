@@ -7,7 +7,7 @@ namespace enkel {
 	class enkel_stl
 	{
 	public:
-		static bool is_stl_const(const std::wstring &name);
+		static bool is_stl_macro(const std::wstring &name);
 		static bool is_stl_func(const std::wstring &name);
 		static runtime::variant_datatype get_const(const std::wstring &name);
 		static void print(std::wostream &outStream, runtime::variant_datatype &data);
@@ -15,6 +15,6 @@ namespace enkel {
 
 	private:
 		static std::vector<std::wstring> mStlFuncNames;
-		static std::map<std::wstring, runtime::variant_datatype> mStlConsts;
+		static std::map<std::wstring, runtime::variant_datatype> mStlMacros;
 	};
 }

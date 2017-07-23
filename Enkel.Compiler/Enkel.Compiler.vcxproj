@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\call_visitor.cpp" />
     <ClCompile Include="src\compiler_err_logger.cpp" />
     <ClCompile Include="src\enkel_module.cpp" />
     <ClCompile Include="src\enkel_runtime.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="include\ast\return_expr_node.h" />
     <ClInclude Include="include\ast\var_decl_expr_node.h" />
     <ClInclude Include="include\ast\var_expr_node.h" />
+    <ClInclude Include="include\call_visitor.h" />
     <ClInclude Include="include\compiler_err_logger.h" />
     <ClInclude Include="include\compiler_logger.h" />
     <ClInclude Include="include\enkel_module.h" />

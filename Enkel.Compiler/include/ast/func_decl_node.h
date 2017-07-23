@@ -23,7 +23,7 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			std::unique_ptr<param_list_node>& get_params() {
+			std::unique_ptr<param_list_node>& get_paramlist() {
 				return mParamList;
 			}
 

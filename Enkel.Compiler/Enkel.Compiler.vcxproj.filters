@@ -60,6 +60,9 @@
     <ClCompile Include="src\scope_context.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\call_visitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\compiler_err_logger.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="include\ast\if_stmt_node.h">
       <Filter>Header Files\ast</Filter>
+    </ClInclude>
+    <ClInclude Include="include\call_visitor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

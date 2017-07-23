@@ -10,21 +10,21 @@ namespace enkel {
 			expr_node() {
 			}
 
-			expr_node(runtime::variant_datatype &val)
-				: mVal(val) {
+			expr_node(runtime::variant_datatype val)
+				: mVal(std::make_unique<runtime::variant_datatype>(val)) {
 			}
 
 			void set_val(runtime::variant_datatype data) {
-				mVal = data;
+				mVal = std::make_unique<runtime::variant_datatype>(data);
 			}
 
-			runtime::variant_datatype get_val() const {
-				return mVal;
+			runtime::variant_datatype &get_val() const {
+				return *mVal;
 			}
 
 			void accept(base_ast_visitor &visitor) override = 0;
 		protected:
-			runtime::variant_datatype mVal;
+			std::unique_ptr<runtime::variant_datatype> mVal;
 		};
 	}
 }

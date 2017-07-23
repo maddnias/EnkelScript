@@ -13,7 +13,8 @@ namespace enkel {
 			  mI64Val(0),
 			  mUI64Val(0),
 			  mFVal(0),
-			  mPtrVal(nullptr) {
+			  mPtrVal(nullptr),
+			  mEmpty(true) {
 		}
 
 		variant_datatype::variant_datatype(wstring val)
@@ -23,7 +24,8 @@ namespace enkel {
 			  mI64Val(0),
 			  mUI64Val(0),
 			  mFVal(0),
-			  mPtrVal(nullptr) {
+			  mPtrVal(nullptr),
+			  mEmpty(false) {
 		}
 
 		variant_datatype::variant_datatype(int val)
@@ -33,7 +35,8 @@ namespace enkel {
 			  mI64Val(0),
 			  mUI64Val(0),
 			  mFVal(0),
-			  mPtrVal(nullptr) {
+			  mPtrVal(nullptr),
+			  mEmpty(false) {
 		}
 
 		variant_datatype::variant_datatype(int64_t val)
@@ -43,7 +46,8 @@ namespace enkel {
 			  mI64Val(val),
 			  mUI64Val(0),
 			  mFVal(0),
-			  mPtrVal(nullptr) {
+			  mPtrVal(nullptr),
+			  mEmpty(false) {
 		}
 
 		variant_datatype::variant_datatype(uint64_t val)
@@ -53,7 +57,8 @@ namespace enkel {
 			  mI64Val(0),
 			  mUI64Val(val),
 			  mFVal(0),
-			  mPtrVal(nullptr) {
+			  mPtrVal(nullptr),
+			  mEmpty(false) {
 		}
 
 		variant_datatype::variant_datatype(double val)
@@ -63,7 +68,8 @@ namespace enkel {
 			  mI64Val(0),
 			  mUI64Val(0),
 			  mFVal(val),
-			  mPtrVal(nullptr) {
+			  mPtrVal(nullptr),
+			  mEmpty(false) {
 		}
 
 		variant_datatype::~variant_datatype() {
@@ -78,6 +84,7 @@ namespace enkel {
 		}
 
 		variant_datatype& variant_datatype::operator=(const variant_datatype &variant2) {
+			mEmpty = false;
 			mType = variant2.get_type();
 			switch (mType) {
 			case VAR_TYPE_STRING:
@@ -104,13 +111,15 @@ namespace enkel {
 		}
 
 		variant_datatype& variant_datatype::operator=(int i32dat) {
+			mEmpty = false;
 			mType = VAR_TYPE_I32;
 			mI32Val = i32dat;
 
 			return *this;
 		}
 
-		variant_datatype& variant_datatype::operator=(__int64 i64dat) {
+		variant_datatype& variant_datatype::operator=(int64_t i64dat) {
+			mEmpty = false;
 			mType = VAR_TYPE_I64;
 			mI64Val = i64dat;
 
@@ -118,6 +127,7 @@ namespace enkel {
 		}
 
 		variant_datatype& variant_datatype::operator=(void *ptrDat) {
+			mEmpty = false;
 			mType = VAR_TYPE_PTR;
 			mPtrVal = ptrDat;
 
@@ -125,6 +135,7 @@ namespace enkel {
 		}
 
 		variant_datatype& variant_datatype::operator=(double floatDat) {
+			mEmpty = false;
 			mType = VAR_TYPE_FLOAT;
 			mFVal = floatDat;
 
@@ -132,6 +143,7 @@ namespace enkel {
 		}
 
 		variant_datatype& variant_datatype::operator=(wstring strDat) {
+			mEmpty = false;
 			mType = VAR_TYPE_STRING;
 			mStrVal = strDat;
 
@@ -241,22 +253,22 @@ namespace enkel {
 		}
 
 		//TODO: UI64
-		variant_datatype & variant_datatype::operator*(variant_datatype &other) {
+		variant_datatype& variant_datatype::operator*(variant_datatype &other) {
 			int64_t i64tmp;
 			int i32tmp;
 
-			switch(mType) {
+			switch (mType) {
 			case VAR_TYPE_STRING:
 				//TODO: str * str
 				break;
 
-			case VAR_TYPE_I32: 
-				switch(other.get_type()) {
-				case VAR_TYPE_STRING: 
+			case VAR_TYPE_I32:
+				switch (other.get_type()) {
+				case VAR_TYPE_STRING:
 					//TODO: str * (*)
 					break;
 
-				case VAR_TYPE_I32: 
+				case VAR_TYPE_I32:
 					i32tmp = mI32Val * other.mI32Val;
 					i64tmp = static_cast<int64_t>(mI32Val) * static_cast<int64_t>(other.mI32Val);
 
@@ -270,11 +282,11 @@ namespace enkel {
 					}
 					break;
 
-				case VAR_TYPE_I64: 
+				case VAR_TYPE_I64:
 					reset_var(VAR_TYPE_I64);
 					mI64Val = static_cast<int64_t>(mI32Val) * other.mI64Val;
 					break;
-	
+
 				case VAR_TYPE_FLOAT: break;
 				case VAR_TYPE_PTR: break;
 				default: ;
@@ -290,18 +302,18 @@ namespace enkel {
 
 		//TODO: ptr
 		bool variant_datatype::operator==(variant_datatype &other) const {
-			switch(mType) {
-			case VAR_TYPE_STRING: 
+			switch (mType) {
+			case VAR_TYPE_STRING:
 				return mStrVal == other.mStrVal;
-			case VAR_TYPE_I32: 
+			case VAR_TYPE_I32:
 				return mI32Val == other.mI32Val;
-			case VAR_TYPE_I64: 
+			case VAR_TYPE_I64:
 				return mI64Val == other.mI64Val;
-			case VAR_TYPE_UI64: 
+			case VAR_TYPE_UI64:
 				return mUI64Val == other.mUI64Val;
-			case VAR_TYPE_FLOAT: 
+			case VAR_TYPE_FLOAT:
 				return mFVal == other.mFVal;
-			default: 
+			default:
 				return false;;
 			}
 		}
@@ -389,6 +401,10 @@ namespace enkel {
 			default:
 				return L"";
 			}
+		}
+
+		bool variant_datatype::empty() const {
+			return mEmpty;
 		}
 
 		wostream& operator<<(wostream &os, const variant_datatype &var) {

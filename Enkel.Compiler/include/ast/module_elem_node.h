@@ -14,7 +14,7 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			void add_node(std::unique_ptr<base_node> &node) {
+			void add_node(std::unique_ptr<base_node> node) {
 				mNodes.push_back(move(node));
 			}
 

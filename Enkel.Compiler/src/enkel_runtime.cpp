@@ -68,30 +68,39 @@ namespace enkel {
 			return mScopes.back();
 		}
 
-		variant_datatype& enkel_runtime::get_var(wstring ident) {
+		shared_ptr<rt_var> enkel_runtime::get_var(wstring ident) {
 			if (mGlobalScope.var_exists(ident)) {
 				return mGlobalScope.get_var(ident);
 			}
-			for (auto &scope : mScopes) {
-				if (scope.var_exists(ident)) {
-					return scope.get_var(ident);
+			for (auto it = mScopes.rbegin(); it != mScopes.rend();++it) {
+				if (it->var_exists(ident)) {
+					return it->get_var(ident);
 				}
 			}
 			//TODO: real error
 			throw runtime_error("not found");
 		}
 
-		void enkel_runtime::set_var(wstring ident, variant_datatype &data) {
+		variant_datatype& enkel_runtime::get_var_data(wstring ident) {
+			return get_var(ident)->get_data();
+		}
+
+		void enkel_runtime::set_var(rt_var &var) {
+			set_var(var.get_name(), var.get_data());
+		}
+
+		//TODO: use get_var()?
+		void enkel_runtime::set_var(wstring ident, const variant_datatype &data) {
 			if (mGlobalScope.var_exists(ident)) {
-				return mGlobalScope.set_var(ident, data);
+				return mGlobalScope.set_create_var(ident, data, *this);
 			}
-			for(auto &scope : mScopes) {
-				if(scope.var_exists(ident)) {
-					scope.set_var(ident, data);
+			for (auto it = mScopes.rbegin(); it != mScopes.rend(); ++it) {
+				if (it->var_exists(ident)) {
+					it->set_create_var(ident, data, *this);
 					return;
 				}
 			}
-			get_current_scope().set_var(ident, data);
+			get_current_scope().set_create_var(ident, data, *this);
 		}
 
 		wostream& enkel_runtime::get_ostream() const {

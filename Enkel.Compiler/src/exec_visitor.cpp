@@ -3,6 +3,7 @@
 #include "enkel_runtime.h"
 #include "exec_visitor.h"
 #include "nodes.h"
+#include "call_visitor.h"
 
 using namespace enkel::compiler;
 using namespace std;
@@ -71,21 +72,42 @@ namespace enkel {
 		}
 
 		void exec_visitor::visit(var_expr_node &node) {
-			node.set_val(mRuntime.get_var(node.get_name()));
+			node.set_val(mRuntime.get_var_data(node.get_name()));
 		}
 
 		void exec_visitor::visit(call_expr_node &node) {
 			if (node.get_isstl()) {
-				if (node.get_target_name() == L"print") {
-					ensure_arg_count(node.get_args(), 1);
-					auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
-					argExpr->accept(*this);
-
-					enkel_stl::print(mRuntime.get_ostream(), argExpr->get_val());
-				}
+				exec_stl_func(node);
 			}
 			else {
 				auto targetFunc = mRuntime.resolve_func(node.get_target_name());
+				call_visitor caller(mRuntime, targetFunc);
+
+
+				targetFunc = mRuntime.resolve_func(node.get_target_name());
+				auto params = targetFunc->get_paramlist()->get_params();
+				auto args = node.get_args();
+				assert(params.size() == args.size());
+
+				mRuntime.scope_increase();
+				for (int i = 0; i < params.size(); i++) {
+					var_expr_node *varExpr;
+					if (params[i]->is_byref() && ((varExpr = dynamic_cast<var_expr_node*>(args[i].get())))) {
+						//caller.add_arg(mRuntime.get_var(varExpr->get_name())->create_ref(params[i]->get_name()));
+					}
+					else {
+						args[i]->accept(*this);
+						auto curArg = make_shared<rt_var>(mRuntime, params[i]->get_name());
+						curArg->set_data(dynamic_cast<expr_node*>(args[i].get())->get_val());
+						mRuntime.get_current_scope().add_var(curArg);
+					}
+				}
+
+				node.accept(caller);
+				if (caller.has_retval()) {
+					node.set_val(caller.get_retval());
+				}
+				mRuntime.scope_decrease();
 			}
 		}
 
@@ -120,12 +142,20 @@ namespace enkel {
 
 		void exec_visitor::visit(func_decl_node &node) {
 			node.get_body()->accept(*this);
-			if(mRuntime.get_current_scope().var_exists(L"0_ret")) {
-				node.set_val(mRuntime.get_current_scope().get_var(L"0_ret"));
+		}
+
+		void exec_visitor::exec_stl_func(call_expr_node &node) {
+			assert(node.get_isstl());
+			if (node.get_target_name() == L"print") {
+				ensure_arg_count(node.get_args(), 1);
+				auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
+				argExpr->accept(*this);
+
+				enkel_stl::print(mRuntime.get_ostream(), argExpr->get_val());
 			}
 		}
 
-		bool exec_visitor::ensure_arg_count(vector<unique_ptr<base_node>> &args, int expectedCount) {
+		bool exec_visitor::ensure_arg_count(vector<shared_ptr<base_node>> &args, int expectedCount) {
 			bool isCorrect = args.size() == expectedCount;
 			if (!isCorrect) {
 				//TODO: runtime error

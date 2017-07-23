@@ -22,9 +22,12 @@ namespace enkel {
 			void visit(compiler::block_node &node) override;
 			void visit(compiler::func_decl_node &node) override;
 
-		private:
-			static bool ensure_arg_count(std::vector<std::unique_ptr<compiler::base_node>> &args, int expectedCount);
+		protected:
 			enkel_runtime& mRuntime;
+
+		private:
+			void exec_stl_func(compiler::call_expr_node &node);
+			static bool ensure_arg_count(std::vector<std::shared_ptr<compiler::base_node>> &args, int expectedCount);
 		};
 	}
 }

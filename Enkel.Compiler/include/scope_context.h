@@ -11,9 +11,11 @@ namespace enkel {
 			scope_context();
 			~scope_context();
 
-			void set_var(std::wstring ident, variant_datatype data);
-			variant_datatype& get_var(std::wstring ident);
-			bool var_exists(const std::wstring & ident);
+			void set_create_var(std::wstring ident, variant_datatype data, class enkel_runtime &rt);
+			std::shared_ptr<rt_var> get_var(std::wstring ident);
+			variant_datatype& get_var_data(std::wstring ident);
+			bool var_exists(const std::wstring &ident);
+			void add_var(std::shared_ptr<rt_var> var);
 
 		private:
 			std::shared_ptr<rt_var> find_var(std::wstring ident);

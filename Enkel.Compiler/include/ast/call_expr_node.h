@@ -17,7 +17,7 @@ namespace enkel {
 				mArgs.push_back(move(arg));
 			}
 
-			std::vector<std::unique_ptr<base_node>>& get_args() {
+			std::vector<std::shared_ptr<base_node>>& get_args() {
 				return mArgs;
 			}
 
@@ -36,7 +36,7 @@ namespace enkel {
 		private:
 			bool mIsStl;
 			std::wstring mTargetFunc;
-			std::vector<std::unique_ptr<base_node>> mArgs;
+			std::vector<std::shared_ptr<base_node>> mArgs;
 		};
 	}
 }

@@ -16,3 +16,4 @@
 #include "ast/var_expr_node.h"
 #include "ast/var_expr_node.h"
 #include "ast/if_stmt_node.h"
+#include "ast/loop_stmt_node.h"

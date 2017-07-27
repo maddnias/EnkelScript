@@ -136,6 +136,14 @@ namespace enkel {
 				return parse_keyword();
 			case TOK_STL_CONST:
 				return parse_stl_const();
+			case TOK_OPEN_PARENTH /* ( expr ) */:
+				// Eat '('
+				next_token();
+				auto expr = parse_expr();
+				expect(TOK_CLOSE_PARENTH, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
+				// Eat ')'
+				next_token();
+				return move(expr);
 			}
 			return nullptr;
 		}
@@ -345,6 +353,74 @@ namespace enkel {
 			return make_unique<if_stmt_node>(move(cond), move(trueBlock), move(falseBlock));
 		}
 
+		unique_ptr<base_node> parser::parse_loop_stmt() {
+			unique_ptr<base_node> decl, incr, cond, body;
+
+			if (mCurTok->get_lexeme_str() == L"loop"
+				|| mCurTok->get_lexeme_str() == L"while") {
+				// Eat 'while'/'loop'
+				next_token();
+				cond = parse_expr();
+				body = parse_block();
+			}
+			else {
+				// Assume for
+				// Eat 'for'
+				next_token();
+				// Eat potential '('s
+				while (mCurTok->get_type() == TOK_OPEN_PARENTH) {
+					next_token();
+				}
+
+				decl = parse_stmt();
+
+				expect(L"to", mCurTok->get_lexeme_str(), error_level::ERR_LVL_ERROR);
+				// Eat 'to'
+				next_token();
+				auto varDeclExpr = dynamic_cast<var_decl_expr_node*>(decl.get());
+				// There must be a var decl expr first
+				assert(varDeclExpr);
+				auto condExpr = parse_expr();
+
+				// Check if we have a "step"
+				if (mCurTok->get_type() == TOK_KEYWORD
+					&& mCurTok->get_lexeme_str() == L"step") {
+					// Eat 'step'
+					next_token();
+					auto stepExpr = parse_expr();
+					bool isNegStep = dynamic_cast<const_expr_node*>(stepExpr.get())->get_val() < 0;
+
+					// Construct a synthetic 'decl != expr'
+					cond = make_unique<bin_expr_node>(isNegStep ? bin_expr_node::BIN_OP_GTEQ : bin_expr_node::BIN_OP_LTEQ,
+						make_unique<var_expr_node>(varDeclExpr->get_name()), parse_expr());
+
+					incr = make_unique<var_decl_expr_node>(L"", varDeclExpr->get_name(),
+						make_unique<bin_expr_node>(isNegStep ? bin_expr_node::BIN_OP_MINUS : bin_expr_node::BIN_OP_PLUS,
+							make_unique<var_expr_node>(varDeclExpr->get_name()),
+							move(stepExpr)));
+				}
+				else {
+					// Construct a synthetic 'decl != expr'
+					cond = make_unique<bin_expr_node>(bin_expr_node::BIN_OP_LTEQ,
+						make_unique<var_expr_node>(varDeclExpr->get_name()), parse_expr());
+
+					// Construct a synthetic 'decl := decl + 1'
+					incr = make_unique<var_decl_expr_node>(L"", varDeclExpr->get_name(),
+						make_unique<bin_expr_node>(bin_expr_node::BIN_OP_PLUS,
+							make_unique<var_expr_node>(varDeclExpr->get_name()),
+							make_unique<const_expr_node>(1)));
+				}
+
+				body = parse_block();
+			}
+
+			expect(TOK_END, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
+			// Eat 'end'
+			next_token();
+
+			return make_unique<loop_stmt_node>(move(decl), move(incr), move(cond), move(body));
+		}
+
 		unique_ptr<base_node> parser::parse_keyword() {
 			assert(mCurTok->get_type() == TOK_KEYWORD);
 			if (mCurTok->get_lexeme_str() == L"if") {
@@ -359,6 +435,11 @@ namespace enkel {
 				next_token();
 				return make_unique<return_expr_node>(move(parse_expr()));
 			}
+			if (mCurTok->get_lexeme_str() == L"loop"
+				|| mCurTok->get_lexeme_str() == L"for"
+				|| mCurTok->get_lexeme_str() == L"while") {
+				return parse_loop_stmt();
+			}
 
 			return nullptr;
 		}
@@ -372,7 +453,7 @@ namespace enkel {
 				else {
 					// Since parse_stmt() can return nullptr we need to do this
 					auto stmt = parse_stmt();
-					if(!stmt) {
+					if (!stmt) {
 						//TODO: parser error
 					}
 					else {
@@ -431,6 +512,9 @@ namespace enkel {
 				else if (lexeme == L">=") {
 					op = bin_expr_node::BIN_OP_GTEQ;
 				}
+				else if (lexeme == L"!=") {
+					op = bin_expr_node::BIN_OP_NEQUAL;
+				}
 
 				// Eat op
 				next_token();
@@ -458,7 +542,7 @@ namespace enkel {
 			}
 
 			BinOpPrecMap::iterator it;
-			if((it = mBinOpPrec.find(mCurTok->get_lexeme_str())) == mBinOpPrec.end()) {
+			if ((it = mBinOpPrec.find(mCurTok->get_lexeme_str())) == mBinOpPrec.end()) {
 				return -1;
 			}
 

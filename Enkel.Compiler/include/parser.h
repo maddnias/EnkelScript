@@ -34,6 +34,7 @@ namespace enkel {
 			std::unique_ptr<base_node> parse_func_decl();
 			void parse_else_chain(std::unique_ptr<if_stmt_node> &node);
 			std::unique_ptr<base_node> parse_if_stmt();
+			std::unique_ptr<base_node> parse_loop_stmt();
 			std::unique_ptr<base_node> parse_keyword();
 			std::unique_ptr<module_elem_node> parse_mod_elem();
 			std::unique_ptr<base_node> parse_stmt();

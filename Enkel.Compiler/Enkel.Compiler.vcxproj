@@ -170,6 +170,7 @@
     <ClInclude Include="include\ast\func_decl_node.h" />
     <ClInclude Include="include\ast\func_node.h" />
     <ClInclude Include="include\ast\if_stmt_node.h" />
+    <ClInclude Include="include\ast\loop_stmt_node.h" />
     <ClInclude Include="include\ast\module_elem_node.h" />
     <ClInclude Include="include\ast\module_node.h" />
     <ClInclude Include="include\ast\param_list_node.h" />

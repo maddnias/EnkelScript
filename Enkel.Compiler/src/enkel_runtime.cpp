@@ -34,8 +34,10 @@ namespace enkel {
 
 			auto root = srcParser.parse_module();
 			wcout << L"Module AST:" << endl << endl;
+
 			compiler::print_visitor printer(wcout);
 			root->accept(printer);
+
 			compiler::func_transform_visitor extractor;
 			root->accept(extractor);
 			auto decls = extractor.get_decls();
@@ -43,6 +45,11 @@ namespace enkel {
 			for (auto &decl : decls) {
 				mod->add_func(move(decl));
 			}
+
+			/* 
+			 * compiler::semantic_analyser analyser();
+			 * root->accept(analyser);
+			 */
 
 			mLoadedModules.push_back(mod);
 

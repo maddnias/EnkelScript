@@ -176,5 +176,8 @@
     <ClInclude Include="include\call_visitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ast\loop_stmt_node.h">
+      <Filter>Header Files\ast</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

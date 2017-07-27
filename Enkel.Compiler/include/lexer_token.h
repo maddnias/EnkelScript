@@ -30,7 +30,8 @@ namespace enkel {
 			{ 19, L"TOK_LITERAL" },
 			{ 20, L"TOK_DQUOTE" },
 			{ 21, L"TOK_SQUOTE" },
-			{ 22, L"TOK_STL_CONST"}
+			{ 22, L"TOK_STL_CONST"},
+			{ 23, L"TOK_SEMI_COLON"}
 		};
 
 		enum lexer_tok_type : int {
@@ -56,7 +57,8 @@ namespace enkel {
 			TOK_LITERAL,
 			TOK_DQUOTE,
 			TOK_SQUOTE,
-			TOK_STL_CONST
+			TOK_STL_CONST,
+			TOK_SEMI_COLON
 		};
 
 		class lexer_token {

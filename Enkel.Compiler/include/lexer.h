@@ -47,7 +47,12 @@ namespace enkel {
 				L"return",
 				L"if",
 				L"else",
-				L"ref"
+				L"ref",
+				L"loop",
+				L"for",
+				L"while",
+				L"to",
+				L"step"
 			};
 		};
 	}

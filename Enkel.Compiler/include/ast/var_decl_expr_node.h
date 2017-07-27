@@ -5,7 +5,7 @@ namespace enkel {
 	namespace compiler {
 		class var_decl_expr_node : public base_node {
 		public:
-			 var_decl_expr_node(const std::wstring &scopeDecl, std::wstring &name,
+			 var_decl_expr_node(const std::wstring &scopeDecl, const std::wstring &name,
 				std::unique_ptr<base_node> assignment)
 				: mName(name),
 				mScopeDecl(scopeDecl),

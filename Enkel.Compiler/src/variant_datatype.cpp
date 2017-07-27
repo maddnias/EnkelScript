@@ -172,7 +172,7 @@ namespace enkel {
 		}
 
 		bool variant_datatype::operator<=(variant_datatype &other) const {
-			return *this < other || *this == other;
+			return !(*this > other);
 		}
 
 		bool variant_datatype::operator>(variant_datatype &other) const {
@@ -195,7 +195,17 @@ namespace enkel {
 		}
 
 		bool variant_datatype::operator>=(variant_datatype &other) const {
-			return *this > other || *this == other;
+			return !(*this < other);
+		}
+
+		bool variant_datatype::operator>=(const int &rhs) const {
+			variant_datatype comp(rhs);
+			return *this >= comp;
+		}
+
+		bool variant_datatype::operator<(const int &rhs) const {
+			variant_datatype comp(rhs);
+			return *this < comp;
 		}
 
 		bool variant_datatype::is_num() const {
@@ -528,6 +538,19 @@ namespace enkel {
 					return VAR_TYPE_I64;
 
 				case VAR_TYPE_DOUBLE:
+					return VAR_TYPE_DOUBLE;
+				}
+				break;
+
+			case VAR_TYPE_DOUBLE:
+				switch(ty2) {
+
+				case VAR_TYPE_STRING: 
+					return VAR_TYPE_DOUBLE;
+
+				case VAR_TYPE_I32:
+				case VAR_TYPE_I64:
+				case VAR_TYPE_DOUBLE: 
 					return VAR_TYPE_DOUBLE;
 				}
 				break;

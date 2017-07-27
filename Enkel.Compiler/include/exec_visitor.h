@@ -21,6 +21,7 @@ namespace enkel {
 			void visit(compiler::if_stmt_node &node) override;
 			void visit(compiler::block_node &node) override;
 			void visit(compiler::func_decl_node &node) override;
+			void visit(compiler::loop_stmt_node &node) override;
 
 		protected:
 			enkel_runtime& mRuntime;

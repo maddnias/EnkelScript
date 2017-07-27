@@ -49,6 +49,9 @@ namespace enkel {
 			case bin_expr_node::BIN_OP_EQUAL:
 				node.set_val(val1 == val2);
 				break;
+			case bin_expr_node::BIN_OP_NEQUAL:
+				node.set_val(val1 != val2);
+				break;
 			case bin_expr_node::BIN_OP_MUL:
 				node.set_val(val1 * val2);
 				break;
@@ -153,6 +156,37 @@ namespace enkel {
 
 		void exec_visitor::visit(func_decl_node &node) {
 			node.get_body()->accept(*this);
+		}
+
+		void exec_visitor::visit(loop_stmt_node &node) {
+			mRuntime.scope_increase();
+			if(node.get_decl()) {
+				node.get_decl()->accept(*this);
+			}
+
+			auto condExpr = dynamic_cast<expr_node*>(node.get_cond().get());
+			// Evaluate initial condition
+			condExpr->accept(*this);
+			// Check if cond is a constant (simple 'loop' statement)
+			auto condConstExpr = dynamic_cast<const_expr_node*>(condExpr);
+			if (condConstExpr) {
+				// Ensure it's an i32
+				condConstExpr->get_val().change_to_i32();
+				for (int i = 1; condConstExpr->get_val() >= i; i++) {
+					node.get_body()->accept(*this);
+				}
+			}
+			else {
+				// If it's not a const expr, we need to evaluate each iteration
+				while (condExpr->get_val()) {
+					node.get_body()->accept(*this);
+					if (node.get_incr()) {
+						node.get_incr()->accept(*this);
+					}
+					condExpr->accept(*this);
+				}
+			}
+			mRuntime.scope_decrease();
 		}
 
 		void exec_visitor::exec_stl_func(call_expr_node &node) {

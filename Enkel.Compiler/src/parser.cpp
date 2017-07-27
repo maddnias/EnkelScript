@@ -390,7 +390,7 @@ namespace enkel {
 					auto stepExpr = parse_expr();
 					bool isNegStep = dynamic_cast<const_expr_node*>(stepExpr.get())->get_val() < 0;
 
-					// Construct a synthetic 'decl != expr'
+					// Construct a synthetic 'decl <= expr' or 'decl >= expr'
 					cond = make_unique<bin_expr_node>(isNegStep ? bin_expr_node::BIN_OP_GTEQ : bin_expr_node::BIN_OP_LTEQ,
 						make_unique<var_expr_node>(varDeclExpr->get_name()), move(condExpr));
 
@@ -400,7 +400,7 @@ namespace enkel {
 							move(stepExpr)));
 				}
 				else {
-					// Construct a synthetic 'decl != expr'
+					// Construct a synthetic 'decl <= expr'
 					cond = make_unique<bin_expr_node>(bin_expr_node::BIN_OP_LTEQ,
 						make_unique<var_expr_node>(varDeclExpr->get_name()), move(condExpr));
 

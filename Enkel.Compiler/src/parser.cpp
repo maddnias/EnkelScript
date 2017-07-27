@@ -392,7 +392,7 @@ namespace enkel {
 
 					// Construct a synthetic 'decl != expr'
 					cond = make_unique<bin_expr_node>(isNegStep ? bin_expr_node::BIN_OP_GTEQ : bin_expr_node::BIN_OP_LTEQ,
-						make_unique<var_expr_node>(varDeclExpr->get_name()), parse_expr());
+						make_unique<var_expr_node>(varDeclExpr->get_name()), move(condExpr));
 
 					incr = make_unique<var_decl_expr_node>(L"", varDeclExpr->get_name(),
 						make_unique<bin_expr_node>(isNegStep ? bin_expr_node::BIN_OP_MINUS : bin_expr_node::BIN_OP_PLUS,
@@ -402,13 +402,19 @@ namespace enkel {
 				else {
 					// Construct a synthetic 'decl != expr'
 					cond = make_unique<bin_expr_node>(bin_expr_node::BIN_OP_LTEQ,
-						make_unique<var_expr_node>(varDeclExpr->get_name()), parse_expr());
+						make_unique<var_expr_node>(varDeclExpr->get_name()), move(condExpr));
 
 					// Construct a synthetic 'decl := decl + 1'
 					incr = make_unique<var_decl_expr_node>(L"", varDeclExpr->get_name(),
 						make_unique<bin_expr_node>(bin_expr_node::BIN_OP_PLUS,
 							make_unique<var_expr_node>(varDeclExpr->get_name()),
 							make_unique<const_expr_node>(1)));
+				}
+
+				while(mCurTok->get_type() == TOK_CLOSE_PARENTH) {
+					//TODO: make sure there is an equal amount of opening ones?
+					// Eat ')'
+					next_token();
 				}
 
 				body = parse_block();

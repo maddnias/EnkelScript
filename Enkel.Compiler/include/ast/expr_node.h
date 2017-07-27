@@ -18,7 +18,7 @@ namespace enkel {
 				mVal = std::make_unique<runtime::variant_datatype>(data);
 			}
 
-			runtime::variant_datatype &get_val() const {
+			virtual runtime::variant_datatype &get_val() {
 				return *mVal;
 			}
 

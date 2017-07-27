@@ -91,7 +91,9 @@ namespace enkel {
 			wstring numberData;
 			wchar_t nextChar = peek_next_char();
 
-			while (iswdigit(nextChar)) {
+			//TODO: localize double seperator?
+			while (iswdigit(nextChar)
+				|| nextChar == '.') {
 				numberData += get_next_char();
 				nextChar = peek_next_char();
 			}
@@ -202,7 +204,7 @@ namespace enkel {
 			}
 
 			if (iswdigit(nextChar)) {
-				return MAKE_TOK(TOK_NUMBER, parse_number());
+				return MAKE_TOK(TOK_INTEGER, parse_number());
 			}
 
 			if(nextChar == '"') {
@@ -251,9 +253,23 @@ namespace enkel {
 			case '=':
 				eat();
 				return MAKE_TOK(TOK_OP_BIN, L"=");
+			case '<':
+				eat();
+				if(peek() == '=') {
+					eat();
+					return MAKE_TOK(TOK_OP_BIN, L"<=");
+				}
+				return MAKE_TOK(TOK_OP_BIN, L"<");
+			case '>':
+				eat();
+				if (peek() == '=') {
+					eat();
+					return MAKE_TOK(TOK_OP_BIN, L">=");
+				}
+				return MAKE_TOK(TOK_OP_BIN, L">");
 			case '!':
 				eat();
-				if(peek(1) == '=') {
+				if(peek() == '=') {
 					eat();
 					return MAKE_TOK(TOK_OP_BIN, L"!=");
 				}

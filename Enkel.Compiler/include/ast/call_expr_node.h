@@ -1,7 +1,7 @@
 #pragma once
-#include "enkel_stl.h"
 #include "expr_node.h"
 #include <vector>
+#include "enkel_stl.h"
 
 namespace enkel {
 	namespace compiler {
@@ -33,6 +33,12 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
+			runtime::variant_datatype& get_val() override {
+				if(!mVal) {
+					mVal = std::make_unique<runtime::variant_datatype>();
+				}
+				return *mVal;
+			}
 		private:
 			bool mIsStl;
 			std::wstring mTargetFunc;

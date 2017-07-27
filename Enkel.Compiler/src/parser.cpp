@@ -51,8 +51,6 @@ namespace enkel {
 		unique_ptr<base_node> parser::parse_expr() {
 			auto lhs = parse_unary();
 			if (!lhs) {
-				// Prevent infinite loop
-				next_token();
 				return nullptr;
 			}
 
@@ -113,7 +111,7 @@ namespace enkel {
 			next_token();
 			expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
 
-			if(!enkel_stl::is_stl_macro(mCurTok->get_lexeme_str())) {
+			if (!enkel_stl::is_stl_macro(mCurTok->get_lexeme_str())) {
 				// TODO: compiler error
 				throw runtime_error("const");
 			}
@@ -130,7 +128,7 @@ namespace enkel {
 				return parse_identifer();
 			case TOK_VAR_DECL:
 				//		return parse_var_decl();
-			case TOK_NUMBER:
+			case TOK_INTEGER:
 				return parse_number();
 			case TOK_LITERAL:
 				return parse_literal();
@@ -167,7 +165,7 @@ namespace enkel {
 				if (mCurTok->get_type() == TOK_EOF) {
 					//TODO: something seriously wrong
 				}
-				if(mCurTok->get_type() == TOK_COMMA) {
+				if (mCurTok->get_type() == TOK_COMMA) {
 					// Eat ','
 					next_token();
 					continue;
@@ -218,12 +216,25 @@ namespace enkel {
 				// No params
 				return move(params);
 			}
-			expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
+			//expect(TOK_IDENTIFIER, mCurTok->get_type(), error_level::ERR_LVL_ERROR);
 
 			while (mCurTok->get_type() == TOK_IDENTIFIER
-				|| mCurTok->get_type() == TOK_COMMA) {
+				|| mCurTok->get_type() == TOK_COMMA
+				|| mCurTok->get_type() == TOK_KEYWORD) {
+				if (mCurTok->get_type() == TOK_COMMA) {
+					// Eat ','
+					next_token();
+					continue;
+				}
+				bool isRef = false;
+				if (mCurTok->get_type() == TOK_KEYWORD) {
+					expect(L"ref", mCurTok->get_lexeme_str(), error_level::ERR_LVL_ERROR);
+					isRef = true;
+					// Eat 'ref'
+					next_token();
+				}
 				if (mCurTok->get_type() == TOK_IDENTIFIER) {
-					params->add_param(make_unique<param_node>(mCurTok->get_lexeme_str()));
+					params->add_param(make_unique<param_node>(mCurTok->get_lexeme_str(), isRef));
 				}
 				// Eat ident/comma
 				next_token();
@@ -359,7 +370,14 @@ namespace enkel {
 					modElem->add_node(parse_func_decl());
 				}
 				else {
-					modElem->add_node(parse_stmt());
+					// Since parse_stmt() can return nullptr we need to do this
+					auto stmt = parse_stmt();
+					if(!stmt) {
+						//TODO: parser error
+					}
+					else {
+						modElem->add_node(move(stmt));
+					}
 				}
 			}
 
@@ -389,21 +407,31 @@ namespace enkel {
 					return lhs;
 				}
 
+				//TODO: better method for this
 				bin_expr_node::bin_op op;
-				switch (mCurTok->get_lexeme_str()[0]) {
-				case '+':
+				auto lexeme = mCurTok->get_lexeme_str();
+				if (lexeme == L"+") {
 					op = bin_expr_node::BIN_OP_PLUS;
-					break;
-				case '=':
-					op = bin_expr_node::BIN_OP_EQUAL;
-					break;
-				case '*':
-					op = bin_expr_node::BIN_OP_MUL;
-					break;
-				default:
-					//TODO: add rest
-					break;
 				}
+				else if (lexeme == L"=") {
+					op = bin_expr_node::BIN_OP_EQUAL;
+				}
+				else if (lexeme == L"*") {
+					op = bin_expr_node::BIN_OP_MUL;
+				}
+				else if (lexeme == L"<") {
+					op = bin_expr_node::BIN_OP_LT;
+				}
+				else if (lexeme == L">") {
+					op = bin_expr_node::BIN_OP_GT;
+				}
+				else if (lexeme == L"<=") {
+					op = bin_expr_node::BIN_OP_LTEQ;
+				}
+				else if (lexeme == L">=") {
+					op = bin_expr_node::BIN_OP_GTEQ;
+				}
+
 				// Eat op
 				next_token();
 
@@ -429,8 +457,13 @@ namespace enkel {
 				return -1;
 			}
 
+			BinOpPrecMap::iterator it;
+			if((it = mBinOpPrec.find(mCurTok->get_lexeme_str())) == mBinOpPrec.end()) {
+				return -1;
+			}
+
 			// Make sure it's a declared binop.
-			int tokPrec = mBinOpPrec[mCurTok->get_lexeme_str()[0]];
+			int tokPrec = it->second;
 			if (tokPrec <= 0)
 				return -1;
 

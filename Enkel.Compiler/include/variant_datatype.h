@@ -12,7 +12,7 @@ namespace enkel {
 				VAR_TYPE_I32,
 				VAR_TYPE_I64,
 				VAR_TYPE_UI64,
-				VAR_TYPE_FLOAT,
+				VAR_TYPE_DOUBLE,
 				VAR_TYPE_PTR
 			};
 
@@ -25,25 +25,46 @@ namespace enkel {
 			~variant_datatype();
 
 			explicit operator bool() const;
+
 			variant_datatype& operator=(const variant_datatype &variant2);
 			variant_datatype& operator=(int i32dat);
 			variant_datatype& operator=(int64_t i64dat);
 			variant_datatype& operator=(void *ptrDat);
 			variant_datatype& operator=(double floatDat);
 			variant_datatype& operator=(std::wstring strDat);
+
+			bool operator<(variant_datatype &other) const;
+			bool operator<=(variant_datatype &other) const;
+			bool operator>(variant_datatype &other) const;
+			bool operator>=(variant_datatype &other) const;
+
 			variant_datatype& operator+(variant_datatype &other);
+			variant_datatype& operator+=(variant_datatype &other);
+
 			variant_datatype& operator*(variant_datatype &other);
+			variant_datatype& operator*=(variant_datatype &other);
+
 			bool operator==(variant_datatype &other) const;
 			bool operator!=(variant_datatype &other) const;
 
 			friend std::wostream& operator<<(std::wostream& os, const variant_datatype &var);
 
 			var_type get_type() const;
-			std::wstring to_string() const;
 			bool empty() const;
 
+			void change_to_i32();
+			void change_to_i64();
+			void change_to_str();
+			void change_to_double();
+
 		private:
+			static var_type get_comp_type(var_type ty1, var_type ty2);
+
+			std::wstring val_as_string() const;
+			int val_as_i32() const;
+			int64_t val_as_i64() const;
 			double val_as_double() const;
+
 			void reset_var(var_type type = VAR_TYPE_I32);
 			static bool ensure_addition_possible(var_type lType, var_type rType);
 		

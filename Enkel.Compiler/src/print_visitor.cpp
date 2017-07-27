@@ -9,7 +9,8 @@ namespace enkel {
 	namespace compiler {
 		print_visitor::print_visitor(wostream &outStream)
 			: mOutStream(outStream),
-			  mIndent(0) {
+			mIndent(0),
+			mNodeDepth(0) {
 		}
 
 		print_visitor::~print_visitor() {
@@ -54,12 +55,32 @@ namespace enkel {
 			case bin_expr_node::BIN_OP_PLUS:
 				print(L" + ");
 				break;
+
 			case bin_expr_node::BIN_OP_EQUAL:
 				print(L" = ");
 				break;
+
 			case bin_expr_node::BIN_OP_MUL:
 				print(L" * ");
 				break;
+
+			case bin_expr_node::BIN_OP_LT: 
+				print(L" < ");
+				break;
+
+			case bin_expr_node::BIN_OP_GT: 
+				print(L" > ");
+				break;
+
+			case bin_expr_node::BIN_OP_LTEQ:
+				print(L" <= ");
+				break;
+
+			case bin_expr_node::BIN_OP_GTEQ:
+				print(L" >= ");
+				break;
+
+			default: ;
 			}
 			node.get_rhs()->accept(*this);
 		}
@@ -69,13 +90,15 @@ namespace enkel {
 			int curIndent = reset_indent();
 			int argCount = node.get_args().size();
 			int counter = 0;
+			mNodeDepth++;
 			for (auto &arg : node.get_args()) {
 				arg->accept(*this);
 				if (++counter < argCount) {
 					print(", ");
 				}
 			}
-			print(")");
+			mNodeDepth--;
+			print(L")", mNodeDepth == 0 ? NL : L"");
 			mIndent = curIndent;
 		}
 
@@ -88,7 +111,7 @@ namespace enkel {
 			indent();
 			node.get_body()->accept(*this);
 			de_indent();
-			print(L"end", NL);
+			print(L"end", NL, NL);
 		}
 
 		void print_visitor::visit(func_node &node) {
@@ -102,14 +125,21 @@ namespace enkel {
 				print("@", constName);
 			}
 			else {
-				print(node.get_val());
+				if(node.get_val().get_type() == runtime::variant_datatype::VAR_TYPE_STRING) {
+					print(L"\"", node.get_val(), L"\"");
+				}
+				else {
+					print(node.get_val());
+				}
 			}
 		}
 
 		void print_visitor::visit(return_expr_node &node) {
 			print(L"return ");
 			int curIndent = reset_indent();
+			mNodeDepth++;
 			node.get_ret_expr()->accept(*this);
+			mNodeDepth--;
 			mIndent = curIndent;
 			print(NL);
 		}
@@ -119,7 +149,9 @@ namespace enkel {
 			if (node.get_init_expr()) {
 				int curIndent = reset_indent();
 				print(L" := ");
+				mNodeDepth++;
 				node.get_init_expr()->accept(*this);
+				mNodeDepth--;
 				mIndent = curIndent;
 			}
 			print(NL);
@@ -135,6 +167,9 @@ namespace enkel {
 			int paramCount = node.get_params().size();
 			int cur = 0;
 			for (auto &param : node.get_params()) {
+				if(param->is_byref()) {
+					print("ref ");
+				}
 				param->accept(*this);
 				if (++cur < paramCount) {
 					print(L", ");

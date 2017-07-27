@@ -40,6 +40,7 @@ namespace enkel {
 
 			std::wostream &mOutStream;
 			int mIndent;
+			int mNodeDepth;
 		};
 
 

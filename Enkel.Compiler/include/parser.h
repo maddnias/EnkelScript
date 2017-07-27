@@ -7,11 +7,10 @@
 
 namespace enkel {
 	namespace compiler {
-		class parser
-		{
+		class parser {
 		public:
-			parser(std::unique_ptr<lexer> lexer, 
-				std::unique_ptr<compiler_logger> compileLogger = nullptr);
+			parser(std::unique_ptr<lexer> lexer,
+			       std::unique_ptr<compiler_logger> compileLogger = nullptr);
 			~parser();
 
 			std::shared_ptr<lexer_token> next_token(int count = 1);
@@ -27,6 +26,7 @@ namespace enkel {
 			using FuncDeclVec = std::unique_ptr<std::vector<std::unique_ptr<func_decl_node>>>;
 			using ParamsVec = std::unique_ptr<std::vector<std::unique_ptr<param_node>>>;
 			using error_level = compiler_logger::error_level;
+			using BinOpPrecMap = std::map<std::wstring, int>;
 
 			std::unique_ptr<param_list_node> parse_params();
 			std::unique_ptr<base_node> parse_unary();
@@ -53,12 +53,15 @@ namespace enkel {
 
 			std::unique_ptr<lexer> mLexer;
 			std::shared_ptr<lexer_token> mCurTok;
-			std::map<char, int> mBinOpPrec = {
-				{'=', 2},
-				{'<', 10},
-				{'+', 20},
-				{'-', 20},
-				{'*', 40}
+			BinOpPrecMap mBinOpPrec = {
+				{L"=", 2},
+				{L"<", 10},
+				{L">", 10},
+				{L"<=", 10},
+				{L">=", 10},
+				{L"+", 20},
+				//{'-', 20},
+				{L"*", 40},
 			};
 			std::unique_ptr<compiler_logger> mCompileLogger;
 		};

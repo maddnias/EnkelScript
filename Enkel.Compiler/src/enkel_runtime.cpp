@@ -40,7 +40,7 @@ namespace enkel {
 			root->accept(extractor);
 			auto decls = extractor.get_decls();
 
-			for(auto &decl : decls) {
+			for (auto &decl : decls) {
 				mod->add_func(move(decl));
 			}
 
@@ -68,13 +68,26 @@ namespace enkel {
 			return mScopes.back();
 		}
 
+		//TODO: Assumes var refs are always in a higher scope
 		shared_ptr<rt_var> enkel_runtime::get_var(wstring ident) {
+			//TODO: global refs?
 			if (mGlobalScope.var_exists(ident)) {
 				return mGlobalScope.get_var(ident);
 			}
-			for (auto it = mScopes.rbegin(); it != mScopes.rend();++it) {
+			shared_ptr<rt_var> varRef;
+			for (auto it = mScopes.rbegin(); it != mScopes.rend(); ++it) {
 				if (it->var_exists(ident)) {
-					return it->get_var(ident);
+					if (!varRef && !(varRef = it->get_var(ident))->is_ref()) {
+						// No references to it
+						return varRef;
+					}
+
+					// We have a ref, attempt to find what it's pointing to
+					for (int i = 0; i < varRef->get_scope_level(); i++) {
+						if (mScopes.at(i).var_exists(varRef->get_ref_name())) {
+							return mScopes.at(i).get_var(varRef->get_ref_name());
+						}
+					}
 				}
 			}
 			//TODO: real error
@@ -89,15 +102,26 @@ namespace enkel {
 			set_var(var.get_name(), var.get_data());
 		}
 
-		//TODO: use get_var()?
+		//TODO: Assumes var refs are always in a higher scope
 		void enkel_runtime::set_var(wstring ident, const variant_datatype &data) {
 			if (mGlobalScope.var_exists(ident)) {
 				return mGlobalScope.set_create_var(ident, data, *this);
 			}
+			shared_ptr<rt_var> varRef;
 			for (auto it = mScopes.rbegin(); it != mScopes.rend(); ++it) {
 				if (it->var_exists(ident)) {
-					it->set_create_var(ident, data, *this);
-					return;
+					if (!varRef && !(varRef = it->get_var(ident))->is_ref()) {
+						// No references to it
+						it->set_create_var(ident, data, *this);
+					}
+					else {
+						// We have a ref, attempt to find what it's pointing to
+						for (int i = 0; i < varRef->get_scope_level(); i++) {
+							if (mScopes.at(i).var_exists(varRef->get_ref_name())) {
+								return mScopes.at(i).set_create_var(varRef->get_ref_name(), data, *this);
+							}
+						}
+					}
 				}
 			}
 			get_current_scope().set_create_var(ident, data, *this);
@@ -107,13 +131,17 @@ namespace enkel {
 			return mOutStream;
 		}
 
-		shared_ptr<compiler::func_decl_node>& enkel_runtime::resolve_func(wstring &name) {
-			for(auto &mod : mLoadedModules) {
-				if(mod->func_exists(name)) {
-					return mod->resolve_func(name);
+		compiler::func_decl_node& enkel_runtime::resolve_func(wstring &name) {
+			for (auto &mod : mLoadedModules) {
+				if (mod->func_exists(name)) {
+					return *mod->resolve_func(name);
 				}
 			}
 			throw runtime_error("Failed to resolve function");
+		}
+
+		int enkel_runtime::get_scope_level() const {
+			return mScopes.size();
 		}
 
 		unique_ptr<compiler::base_node> enkel_runtime::parse_tl_expr(compiler::parser &parser) {

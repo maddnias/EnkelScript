@@ -8,16 +8,24 @@ namespace enkel {
 	namespace runtime {
 
 		call_visitor::call_visitor(enkel_runtime &rt,
-			shared_ptr<compiler::func_decl_node> targetFunc)
+			compiler::func_decl_node &targetFunc)
 			: exec_visitor(rt),
-			mTargetFunc(targetFunc) {
+			mTargetFunc(targetFunc),
+			mRecursive(false) {
 		}
 
 		call_visitor::~call_visitor() {
 		}
 
 		void call_visitor::visit(compiler::call_expr_node &node) {
-			mTargetFunc->accept(*this);
+			if (node.get_target_name() == mTargetFunc.get_name() && !mRecursive) {
+				// If there is a recursive call in the target function it needs
+				// to be executed through the exec_visitor
+				mRecursive = true;
+				mTargetFunc.accept(*this);
+			} else {
+				exec_visitor::visit(node);
+			}
 		}
 
 		bool call_visitor::has_retval() const {

@@ -8,7 +8,7 @@ namespace enkel {
 			public exec_visitor
 		{
 		public:
-			call_visitor(enkel_runtime &rt, std::shared_ptr<compiler::func_decl_node> targetFunc);
+			call_visitor(enkel_runtime &rt, compiler::func_decl_node &targetFunc);
 			~call_visitor();
 
 			void visit(compiler::call_expr_node &node) override;
@@ -18,7 +18,8 @@ namespace enkel {
 			void visit(compiler::block_node &node) override;
 		private:
 			variant_datatype mRetVal;
-			std::shared_ptr<compiler::func_decl_node> mTargetFunc;
+			compiler::func_decl_node &mTargetFunc;
+			bool mRecursive;
 		};
 	}
 }

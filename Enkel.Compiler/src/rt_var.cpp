@@ -9,14 +9,16 @@ namespace enkel {
 	namespace runtime {
 		rt_var::rt_var(enkel_runtime &rt)
 			: mIsRef(false),
-			mRuntime(rt) {
+			  mRuntime(rt){
+			mScopeLevel = mRuntime.get_scope_level();
 		}
 
 		rt_var::rt_var(enkel_runtime &rt, wstring &name)
 			: mData(),
-			mName(name),
-			mIsRef(false),
-			mRuntime(rt) {
+			  mName(name),
+			  mIsRef(false),
+			  mRuntime(rt) {
+			mScopeLevel = mRuntime.get_scope_level();
 		}
 
 		rt_var::~rt_var() {
@@ -27,8 +29,8 @@ namespace enkel {
 		}
 
 		variant_datatype& rt_var::get_data() {
-			if(mIsRef) {
-				return mRuntime.get_var_data(mRefName);
+			if (mIsRef) {
+				return mRuntime.get_var(mRefName)->get_data();
 			}
 			return mData;
 		}
@@ -46,12 +48,21 @@ namespace enkel {
 			return mIsRef;
 		}
 
-		rt_var rt_var::create_ref(wstring &ident) const {
-			rt_var ref(mRuntime, ident);
-			ref.mIsRef = true;
-			ref.mRefName = mName;
+		shared_ptr<rt_var> rt_var::create_ref(wstring &ident) const {
+			auto ref = make_shared<rt_var>(mRuntime, ident);
+			ref->mIsRef = true;
+			ref->mRefName = mName;
+			ref->mScopeLevel = mRuntime.get_scope_level();
 
 			return ref;
+		}
+
+		int rt_var::get_scope_level() const {
+			return mScopeLevel;
+		}
+
+		wstring& rt_var::get_ref_name() {
+			return mRefName;
 		}
 	}
 }

@@ -38,7 +38,7 @@ namespace enkel {
 			TOK_FUNC_DECL,
 			TOK_END,
 			TOK_IDENTIFIER,
-			TOK_NUMBER,
+			TOK_INTEGER,
 			TOK_UNK,
 			TOK_OPEN_PARENTH,
 			TOK_CLOSE_PARENTH,
@@ -68,23 +68,7 @@ namespace enkel {
 
 			const lexer_tok_type& get_type() const;
 
-			runtime::variant_datatype get_lexeme_num() const {
-				runtime::variant_datatype data;
-				if(mLexeme == L"0") {
-					return runtime::variant_datatype(0);
-				}
-				wchar_t *end;
-				uint64_t interp = wcstoull(mLexeme.c_str(), &end, 10);
-				//TODO: possible error with negatives
-				if(interp <= INT32_MAX) {
-					return runtime::variant_datatype(static_cast<int>(interp));
-				} 
-				if(interp <= INT64_MAX) {
-					return runtime::variant_datatype(static_cast<int64_t>(interp));
-				}
-				//TODO: double
-				return runtime::variant_datatype(interp);
-			}
+			runtime::variant_datatype get_lexeme_num() const;
 
 			const std::wstring& get_lexeme_str() const {
 				return mLexeme;

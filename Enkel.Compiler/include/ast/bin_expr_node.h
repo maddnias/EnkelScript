@@ -11,7 +11,11 @@ namespace enkel {
 			enum bin_op {
 				BIN_OP_PLUS,
 				BIN_OP_EQUAL,
-				BIN_OP_MUL
+				BIN_OP_MUL,
+				BIN_OP_LT,
+				BIN_OP_GT,
+				BIN_OP_LTEQ,
+				BIN_OP_GTEQ
 			};
 
 			bin_expr_node(bin_op op, std::unique_ptr<base_node> lhs,

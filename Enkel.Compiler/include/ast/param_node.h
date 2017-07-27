@@ -6,8 +6,8 @@ namespace enkel {
 		class param_node : public expr_node {
 
 		public:
-			param_node(const std::wstring &ident)
-				: mByRef(false),
+			param_node(const std::wstring &ident, bool isByRef = false)
+				: mByRef(isByRef),
 				mIdent(ident) {
 			}
 
@@ -15,7 +15,7 @@ namespace enkel {
 				visitor.visit(*this);
 			}
 
-			std::wstring get_name() const {
+			std::wstring &get_name() {
 				return mIdent;
 			}
 

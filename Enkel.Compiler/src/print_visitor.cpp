@@ -154,7 +154,9 @@ namespace enkel {
 				mNodeDepth--;
 				mIndent = curIndent;
 			}
-			print(NL);
+			if (mNodeDepth == 0) {
+				print(NL);
+			}
 		}
 
 		void print_visitor::visit(var_expr_node &node) {
@@ -205,6 +207,55 @@ namespace enkel {
 			}
 		}
 
+		void print_visitor::visit(loop_stmt_node &node) {
+			print(NL);
+			// Determine what type of loop it is
+			if (node.get_decl() && node.get_cond() && node.get_incr()) {
+				print(L"for ");
+				mNodeDepth++;
+				int curIndent = reset_indent();
+				node.get_decl()->accept(*this);
+				print(L"; ");
+				node.get_cond()->accept(*this);
+				print(L"; ");
+				node.get_incr()->accept(*this);
+				mIndent = curIndent;
+				mNodeDepth--;
+				print(NL);
+				indent();
+				node.get_body()->accept(*this);
+				de_indent();
+				print(L"end", NL);
+			}
+			else {
+				if(dynamic_cast<const_expr_node*>(node.get_cond().get())) {
+					print(L"loop ");
+					mNodeDepth++;
+					int curIndent = reset_indent();
+					node.get_cond()->accept(*this);
+					mIndent = curIndent;
+					mNodeDepth--;
+					print(NL);
+					indent();
+					node.get_body()->accept(*this);
+					de_indent();
+					print(L"end", NL);
+				} else {
+					print(L"while ");
+					mNodeDepth++;
+					int curIndent = reset_indent();
+					node.get_cond()->accept(*this);
+					mIndent = curIndent;
+					mNodeDepth--;
+					print(NL);
+					indent();
+					node.get_body()->accept(*this);
+					de_indent();
+					print(L"end", NL, NL);
+				}
+			}
+			print(NL);
+		}
 
 		int print_visitor::reset_indent() {
 			int current = mIndent;

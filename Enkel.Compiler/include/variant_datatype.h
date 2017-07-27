@@ -55,6 +55,11 @@ namespace enkel {
 			var_type get_type() const;
 			bool empty() const;
 
+			std::wstring val_as_string() const;
+			int val_as_i32() const;
+			int64_t val_as_i64() const;
+			double val_as_double() const;
+
 			void change_to_i32();
 			void change_to_i64();
 			void change_to_str();
@@ -63,10 +68,6 @@ namespace enkel {
 		private:
 			static var_type get_comp_type(var_type ty1, var_type ty2);
 
-			std::wstring val_as_string() const;
-			int val_as_i32() const;
-			int64_t val_as_i64() const;
-			double val_as_double() const;
 
 			void reset_var(var_type type = VAR_TYPE_I32);
 			static bool ensure_addition_possible(var_type lType, var_type rType);

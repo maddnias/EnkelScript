@@ -221,6 +221,8 @@ namespace enkel {
 			next_token();
 			auto params = make_unique<param_list_node>();
 			if (mCurTok->get_type() == TOK_CLOSE_PARENTH) {
+				// Eat ')'
+				next_token();
 				// No params
 				return move(params);
 			}

@@ -29,6 +29,7 @@ namespace enkel {
 			void visit(var_expr_node &node) override;
 			void visit(param_list_node &node) override;
 			void visit(if_stmt_node &node) override;
+			void visit(loop_stmt_node &node) override;
 
 		private:
 			template<typename... Args /* why different name required?? */>

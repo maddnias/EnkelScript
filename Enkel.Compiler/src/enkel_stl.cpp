@@ -87,8 +87,17 @@ namespace enkel {
 
 	wstring enkel_stl::is_stl_const_val(variant_datatype &val) {
 		for(auto &constPair : mStlMacros) {
-			if(constPair.second == val) {
-				return constPair.first;
+			switch (constPair.second.get_type()) {
+			case variant_datatype::VAR_TYPE_STRING:
+				if(constPair.second.val_as_string() == val.val_as_string()) {
+					return constPair.first;
+				}
+				break;
+			case variant_datatype::VAR_TYPE_I32:
+				if(constPair.second.val_as_i32() == val.val_as_i32()) {
+					return constPair.first;
+				}
+				break;
 			}
 		}
 		return wstring();

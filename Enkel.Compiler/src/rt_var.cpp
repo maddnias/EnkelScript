@@ -48,7 +48,11 @@ namespace enkel {
 			return mIsRef;
 		}
 
-		shared_ptr<rt_var> rt_var::create_ref(wstring &ident) const {
+		shared_ptr<rt_var> rt_var::create_ref() const {
+			return create_ref(mName);
+		}
+
+		shared_ptr<rt_var> rt_var::create_ref(wstring ident) const {
 			auto ref = make_shared<rt_var>(mRuntime, ident);
 			ref->mIsRef = true;
 			ref->mRefName = mName;

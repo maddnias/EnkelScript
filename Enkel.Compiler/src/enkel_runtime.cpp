@@ -98,19 +98,19 @@ namespace enkel {
 				}
 			}
 			//TODO: real error
-			throw runtime_error("not found");
+			return nullptr;
 		}
 
 		variant_datatype& enkel_runtime::get_var_data(wstring ident) {
 			return get_var(ident)->get_data();
 		}
 
-		void enkel_runtime::set_var(rt_var &var) {
-			set_var(var.get_name(), var.get_data());
+		shared_ptr<rt_var> enkel_runtime::set_var(rt_var &var) {
+			return set_var(var.get_name(), var.get_data());
 		}
 
 		//TODO: Assumes var refs are always in a higher scope
-		void enkel_runtime::set_var(wstring ident, const variant_datatype &data) {
+		shared_ptr<rt_var> enkel_runtime::set_var(wstring ident, const variant_datatype &data) {
 			if (mGlobalScope.var_exists(ident)) {
 				return mGlobalScope.set_create_var(ident, data, *this);
 			}
@@ -119,7 +119,7 @@ namespace enkel {
 				if (it->var_exists(ident)) {
 					if (!varRef && !(varRef = it->get_var(ident))->is_ref()) {
 						// No references to it
-						it->set_create_var(ident, data, *this);
+						return it->set_create_var(ident, data, *this);
 					}
 					else {
 						// We have a ref, attempt to find what it's pointing to
@@ -131,7 +131,7 @@ namespace enkel {
 					}
 				}
 			}
-			get_current_scope().set_create_var(ident, data, *this);
+			return get_current_scope().set_create_var(ident, data, *this);
 		}
 
 		wostream& enkel_runtime::get_ostream() const {

@@ -80,9 +80,18 @@ namespace enkel {
 			wstring varIdent = node.get_name();
 			if (node.get_init_expr()) {
 				node.get_init_expr()->accept(*this);
+				auto existingVar = mRuntime.get_var(node.get_name());
 				auto initVal = dynamic_cast<expr_node*>(node.get_init_expr().get())->get_val();
 
-				mRuntime.set_var(varIdent, initVal);
+				if (existingVar
+					&& existingVar->get_scope_level() < mRuntime.get_scope_level()) {
+					// A var with this name exists, simply create a ref to it
+					auto var = mRuntime.get_current_scope().add_var(existingVar->create_ref());
+					var->set_data(initVal);
+				}
+				else {
+					mRuntime.set_var(varIdent, initVal);
+				}
 			}
 		}
 

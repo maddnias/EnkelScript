@@ -23,8 +23,9 @@ namespace enkel {
 			return find_var(ident) != nullptr;
 		}
 
-		void scope_context::add_var(shared_ptr<rt_var> var) {
+		shared_ptr<rt_var> scope_context::add_var(shared_ptr<rt_var> var) {
 			mVars.push_back(var);
+			return var;
 		}
 
 		shared_ptr<rt_var> scope_context::find_var(wstring ident) {
@@ -37,11 +38,12 @@ namespace enkel {
 		}
 
 		//TODO: optimize
-		void scope_context::set_create_var(wstring ident, variant_datatype data, enkel_runtime &rt) {
+		shared_ptr<rt_var> scope_context::set_create_var(wstring ident, variant_datatype data, enkel_runtime &rt) {
 			if(!find_var(ident)) {
 				mVars.push_back(make_shared<rt_var>(rt, ident));
 			}
 			find_var(ident)->set_data(data);
+			return find_var(ident);
 		}
 
 		shared_ptr<rt_var> scope_context::get_var(wstring ident) {

@@ -198,6 +198,12 @@ namespace enkel {
 			return *this > other || *this == other;
 		}
 
+		bool variant_datatype::is_num() const {
+			return mType == VAR_TYPE_I32
+				|| mType == VAR_TYPE_I64
+				|| mType == VAR_TYPE_DOUBLE;
+		}
+
 		variant_datatype& variant_datatype::operator+(variant_datatype &other) {
 			int64_t i64tmp;
 			int i32tmp;
@@ -241,14 +247,24 @@ namespace enkel {
 				if(other.get_type() == VAR_TYPE_I32 || other.get_type() == VAR_TYPE_I64) {
 					mI64Val += other.val_as_i64();
 				} 
-				else {
+				else if(other.get_type() == VAR_TYPE_DOUBLE) {
 					change_to_double();
 					mFVal += other.val_as_double();
+				} else {
+					auto tmpStr = val_as_string() + other.val_as_string();
+					reset_var(VAR_TYPE_STRING);
+					mStrVal = tmpStr;
 				}
 				break;
 
 			case VAR_TYPE_DOUBLE:
-				mFVal += other.val_as_double();
+				if (other.is_num()) {
+					mFVal += other.val_as_double();
+				} else {
+					auto tmpStr = val_as_string() + other.val_as_string();
+					reset_var(VAR_TYPE_STRING);
+					mStrVal = tmpStr;
+				}
 				break;
 			}
 

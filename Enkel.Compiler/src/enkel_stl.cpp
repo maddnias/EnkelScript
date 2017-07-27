@@ -82,10 +82,7 @@ namespace enkel {
 	}
 
 	bool enkel_stl::is_number(variant_datatype &data) {
-		auto dataType = data.get_type();
-		return dataType == variant_datatype::VAR_TYPE_I32
-			|| dataType == variant_datatype::VAR_TYPE_I64
-			|| dataType == variant_datatype::VAR_TYPE_DOUBLE;
+		return data.is_num();
 	}
 
 	wstring enkel_stl::is_stl_const_val(variant_datatype &val) {

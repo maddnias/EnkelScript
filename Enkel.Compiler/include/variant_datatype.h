@@ -38,6 +38,7 @@ namespace enkel {
 			bool operator>(variant_datatype &other) const;
 			bool operator>=(variant_datatype &other) const;
 
+			bool is_num() const;
 			variant_datatype& operator+(variant_datatype &other);
 			variant_datatype& operator+=(variant_datatype &other);
 

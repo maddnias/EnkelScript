@@ -179,5 +179,8 @@
     <ClInclude Include="include\ast\loop_stmt_node.h">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
+    <ClInclude Include="enkel_stl_param_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

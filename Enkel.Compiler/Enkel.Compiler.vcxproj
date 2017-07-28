@@ -158,6 +158,7 @@
     <ClCompile Include="src\variant_datatype.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="enkel_stl_param_wrapper.h" />
     <ClInclude Include="include\ast\assignment_stmt_node.h" />
     <ClInclude Include="include\ast\assign_expr_node.h" />
     <ClInclude Include="include\ast\base_ast_visitor.h" />

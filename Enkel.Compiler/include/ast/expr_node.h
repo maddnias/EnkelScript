@@ -22,6 +22,14 @@ namespace enkel {
 				return *mVal;
 			}
 
+			std::unique_ptr<runtime::variant_datatype> take_val() {
+				return move(mVal);
+			}
+
+			void assign_val(std::unique_ptr<runtime::variant_datatype> val) {
+				mVal = move(val);
+			}
+
 			void accept(base_ast_visitor &visitor) override = 0;
 		protected:
 			std::unique_ptr<runtime::variant_datatype> mVal;

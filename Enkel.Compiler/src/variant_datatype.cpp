@@ -84,7 +84,7 @@ namespace enkel {
 		}
 
 		variant_datatype& variant_datatype::operator=(const variant_datatype &variant2) {
-			if (!variant2.empty()) {
+			if (!variant2.is_empty()) {
 				mEmpty = false;
 			}
 			mType = variant2.get_type();
@@ -424,6 +424,10 @@ namespace enkel {
 			mFVal = fTmp;
 		}
 
+		variant_datatype variant_datatype::empty() {
+			return variant_datatype();
+		}
+
 		void variant_datatype::reset_var(var_type type) {
 			mType = type;
 			mStrVal = L"";
@@ -484,7 +488,7 @@ namespace enkel {
 			}
 		}
 
-		bool variant_datatype::empty() const {
+		bool variant_datatype::is_empty() const {
 			return mEmpty;
 		}
 
@@ -602,7 +606,7 @@ namespace enkel {
 		}
 
 		wostream& operator<<(wostream &os, const variant_datatype &var) {
-			os << (var.empty() ? L"null" : var.val_as_string());
+			os << (var.is_empty() ? L"null" : var.val_as_string());
 			return os;
 		}
 	}

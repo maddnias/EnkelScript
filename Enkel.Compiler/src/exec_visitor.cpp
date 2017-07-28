@@ -4,6 +4,8 @@
 #include "exec_visitor.h"
 #include "nodes.h"
 #include "call_visitor.h"
+#include "enkel_stl.h"
+#include <iostream>
 
 using namespace enkel::compiler;
 using namespace std;
@@ -201,59 +203,30 @@ namespace enkel {
 		void exec_visitor::exec_stl_func(call_expr_node &node) {
 			assert(node.get_isstl());
 
-			if (node.get_target_name() == L"print") {
-				ensure_arg_count(node.get_args(), 1);
-				auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
-				argExpr->accept(*this);
+			enkel_stl::StlParamCont params;
 
-				enkel_stl::print(mRuntime.get_ostream(), argExpr->get_val());
+			// If we need special parameters (e.g for print) we push them first
+			if(node.get_target_name() == L"print") {
+				params.push(make_shared<enkel_stl_param_wrapper>(&wcout));
 			}
-			else if(node.get_target_name() == L"int") {
-				ensure_arg_count(node.get_args(), 1);
-				auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
-				argExpr->accept(*this);
 
-				enkel_stl::cast_int(argExpr->get_val());
-				node.set_val(argExpr->get_val());
+			// Push in reverse order
+			for(auto it = node.get_args().rbegin(); it != node.get_args().rend();++it) {
+				(*it)->accept(*this);
+				// Take ownership of the variant
+				params.push(make_shared<enkel_stl_param_wrapper>(move(dynamic_cast<expr_node*>((*it).get())->take_val())));
 			}
-			else if (node.get_target_name() == L"long") {
-				ensure_arg_count(node.get_args(), 1);
-				auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
-				argExpr->accept(*this);
 
-				enkel_stl::cast_long(argExpr->get_val());
-				node.set_val(argExpr->get_val());
-			}
-			else if (node.get_target_name() == L"double") {
-				ensure_arg_count(node.get_args(), 1);
-				auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
-				argExpr->accept(*this);
+			auto val = enkel_stl::exec_func(node.get_target_name(), params);
 
-				enkel_stl::cast_double(argExpr->get_val());
-				node.set_val(argExpr->get_val());
+			// After executing the function we must return ownership of all variants back to
+			// the argument nodes
+			for (auto it = node.get_args().rbegin(); it != node.get_args().rend(); ++it) {
+				dynamic_cast<expr_node*>((*it).get())->assign_val(move(params.top()->take_variant()));
+				params.pop();
 			}
-			else if (node.get_target_name() == L"str") {
-				ensure_arg_count(node.get_args(), 1);
-				auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
-				argExpr->accept(*this);
 
-				enkel_stl::cast_str(argExpr->get_val());
-				node.set_val(argExpr->get_val());
-			}
-			else if (node.get_target_name() == L"type") {
-				ensure_arg_count(node.get_args(), 1);
-				auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
-				argExpr->accept(*this);
-
-				node.set_val(enkel_stl::get_type_name(argExpr->get_val()));
-			}
-			else if (node.get_target_name() == L"isnum") {
-				ensure_arg_count(node.get_args(), 1);
-				auto argExpr = dynamic_cast<expr_node*>(node.get_args()[0].get());
-				argExpr->accept(*this);
-
-				node.set_val(enkel_stl::is_number(argExpr->get_val()));
-			}
+			node.set_val(val);
 		}
 
 		bool exec_visitor::ensure_arg_count(vector<shared_ptr<base_node>> &args, int expectedCount) {

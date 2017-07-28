@@ -53,7 +53,7 @@ namespace enkel {
 			friend std::wostream& operator<<(std::wostream& os, const variant_datatype &var);
 
 			var_type get_type() const;
-			bool empty() const;
+			bool is_empty() const;
 
 			std::wstring val_as_string() const;
 			int val_as_i32() const;
@@ -65,9 +65,10 @@ namespace enkel {
 			void change_to_str();
 			void change_to_double();
 
+			static variant_datatype empty();
+
 		private:
 			static var_type get_comp_type(var_type ty1, var_type ty2);
-
 
 			void reset_var(var_type type = VAR_TYPE_I32);
 			static bool ensure_addition_possible(var_type lType, var_type rType);

@@ -29,7 +29,7 @@ namespace enkel {
 		}
 
 		bool call_visitor::has_retval() const {
-			return !mRetVal.empty();
+			return !mRetVal.is_empty();
 		}
 
 		variant_datatype call_visitor::get_retval() const {
